@@ -1,10 +1,11 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   return (
-    <View>
+    <View style={{ justifyContent: "space-evenly", flex: 1 }}>
       <Text>LoginScreen</Text>
+      <Button title="Login" onPress={() => navigation.navigate("HomeDrawer")} />
     </View>
   );
 };
