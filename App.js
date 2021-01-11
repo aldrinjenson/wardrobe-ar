@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./screens/LoginScreen";
-import HomeDrawer from "./HomeDrawer";
+import HomeStack from "./HomeStack";
 
 const Stack = createStackNavigator();
 
@@ -13,7 +13,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="WardrobeAR" component={LoginScreen} />
-        <Stack.Screen name="HomeDrawer" component={HomeDrawer} />
+        <Stack.Screen name="HomeStack" component={HomeStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );
