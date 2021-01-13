@@ -4,6 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./screens/LoginScreen";
+import SignupScreen from "./screens/SignupScreen";
 import HomeStack from "./HomeStack";
 
 const Stack = createStackNavigator();
@@ -12,7 +13,12 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="WardrobeAR" component={LoginScreen} />
+        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
+      headerShown: false
+    }}/>
+     <Stack.Screen name="SignupScreen" component={SignupScreen} options={{
+      headerShown: false
+    }}/>
         <Stack.Screen name="HomeStack" component={HomeStack} />
       </Stack.Navigator>
     </NavigationContainer>
