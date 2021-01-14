@@ -9,14 +9,15 @@ import {
 } from "react-native";
 import { tops, bottoms } from "../tempData";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const HomeScreen = () => {
-  const [topUrl, setTopUrl] = useState();
-  const [bottomUrl, setBottomUrl] = useState();
+import SvgOrImage from "../components/SvgOrImage";
+const WardrobeScreen = () => {
+  const [topUrl, setTopUrl] = useState("");
+  const [bottomUrl, setBottomUrl] = useState("");
 
   const handleClick = (type, url) => {
     console.log({ type, url });
-    setTopUrl(url);
+    if (type === "top") setTopUrl(url);
+    else setBottomUrl(url);
   };
 
   return (
@@ -24,7 +25,7 @@ const HomeScreen = () => {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#7fba8e",
+          // backgroundColor: "#7fba8e",
           height: "100%",
           justifyContent: "center",
           alignItems: "center",
@@ -34,14 +35,16 @@ const HomeScreen = () => {
         <MaterialCommunityIcons
           name="human-handsdown"
           size={420}
-          color="black"
+          color="#e0ac69"
         />
-        {topUrl && (
-          <Image
-            source={{ uri: topUrl }}
-            style={{ width: 200, height: 150, position: "absolute", top: 160 }}
-          />
-        )}
+        <SvgOrImage
+          uri={topUrl}
+          styles={{ width: 200, height: 200, position: "absolute" }}
+        />
+        <SvgOrImage
+          uri={bottomUrl}
+          styles={{ width: 180, height: 180, position: "absolute", top: 300 }}
+        />
       </View>
 
       <View style={styles.bottomDoubleBar}>
@@ -51,7 +54,7 @@ const HomeScreen = () => {
               key={id}
               onPress={() => handleClick("top", imgUrl)}
             >
-              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
+              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -61,7 +64,8 @@ const HomeScreen = () => {
               key={id}
               onPress={() => handleClick("bottom", imgUrl)}
             >
-              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
+              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
+              {/* <Image key={id} source={{ uri: imgUrl }} style={styles.image} /> */}
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -70,7 +74,7 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default WardrobeScreen;
 
 const styles = StyleSheet.create({
   row: {

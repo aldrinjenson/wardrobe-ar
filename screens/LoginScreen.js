@@ -5,7 +5,7 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={{ justifyContent: "space-evenly", flex: 1 }}>
       <Text>LoginScreen</Text>
-      <Button title="Login" onPress={() => navigation.navigate("HomeStack")} />
+      <Button title="Login" onPress={() => navigation.navigate("Home")} />
     </View>
   );
 };

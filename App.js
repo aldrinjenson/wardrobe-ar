@@ -13,7 +13,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="WardrobeAR" component={LoginScreen} />
-        <Stack.Screen name="HomeStack" component={HomeStack} />
+        <Stack.Screen name="Home" component={HomeStack} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import HomeScreen from "./screens/HomeScreen";
+import WardrobeScreen from "./screens/WardrobeScreen";
 import ScanScreen from "./screens/ScanScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 
@@ -12,7 +12,7 @@ const HomeStack = () => {
     <Tab.Navigator>
       <Tab.Screen
         name="Wardrobe"
-        component={HomeScreen}
+        component={WardrobeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <FontAwesome5
