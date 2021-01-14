@@ -4,7 +4,7 @@ export const tops = [
   { id: 1, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
   {
     id: 2,
-    imgUrl: `https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/shirt.jpeg`,
+    imgUrl: `https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/shirt.svg`,
   },
   {
     id: 3,
