@@ -36,11 +36,11 @@ const ScanScreen = ({ navigation }) => {
 
   const handleSnap = async () => {
     const pic = await cameraRef.current.takePictureAsync({
+      base64: true,
       skipProcessing: true,
     });
-    // navigation.navigate("Home");
-    console.log(pic);
-    // setImgUrl(`data:image/jpg;base64${pic.uri}`);
+    // navigation.navigate("Wardrobe");
+    setImgUrl(pic.uri);
   };
   console.log(imgUrl);
   return (
@@ -85,9 +85,6 @@ const ScanScreen = ({ navigation }) => {
         color="black"
         onPress={handleSnap}
       />
-      {imgUrl && (
-        <Image source={imgUrl} style={{ height: "100%", width: "100%" }} />
-      )}
     </View>
   );
 };

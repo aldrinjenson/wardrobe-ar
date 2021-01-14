@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import HomeScreen from "./screens/HomeScreen";
 import ScanScreen from "./screens/ScanScreen";
 import ProfileScreen from "./screens/ProfileScreen";
@@ -11,13 +11,13 @@ const HomeStack = () => {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="Home"
+        name="Wardrobe"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <MaterialIcons
+            <FontAwesome5
               color={focused ? "#2f95dc" : "#000"}
-              name="home"
+              name="tshirt"
               size={23}
             />
           ),
