@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
   TouchableOpacity,
@@ -86,7 +85,8 @@ const WardrobeScreen = () => {
               key={id}
               onPress={() => handleClick("top", imgUrl)}
             >
-              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
+              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
+              {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -96,8 +96,8 @@ const WardrobeScreen = () => {
               key={id}
               onPress={() => handleClick("bottom", imgUrl)}
             >
-              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
-              {/* <Image key={id} source={{ uri: imgUrl }} style={styles.image} /> */}
+              {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
+              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
             </TouchableOpacity>
           ))}
         </ScrollView>
