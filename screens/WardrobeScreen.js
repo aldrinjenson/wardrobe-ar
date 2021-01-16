@@ -8,8 +8,7 @@ import {
   Button,
 } from "react-native";
 import { tops, bottoms } from "../tempData";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-// import SvgOrImage from "../components/SvgOrImage";
+import SvgOrImage from "../components/SvgOrImage";
 const WardrobeScreen = () => {
   const [topUrl, setTopUrl] = useState(null);
   const [bottomUrl, setBottomUrl] = useState(null);
@@ -85,8 +84,8 @@ const WardrobeScreen = () => {
               key={id}
               onPress={() => handleClick("top", imgUrl)}
             >
-              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
-              {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
+              {/* <Image key={id} source={{ uri: imgUrl }} style={styles.image} /> */}
+              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -96,8 +95,8 @@ const WardrobeScreen = () => {
               key={id}
               onPress={() => handleClick("bottom", imgUrl)}
             >
-              {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
-              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
+              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
+              {/* <Image key={id} source={{ uri: imgUrl }} style={styles.image} /> */}
             </TouchableOpacity>
           ))}
         </ScrollView>
