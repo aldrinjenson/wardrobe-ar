@@ -1,35 +1,47 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import LoginScreen from "./screens/LoginScreen";
 import SignupScreen from "./screens/SignupScreen";
 import HomeStack from "./HomeStack";
+import OnboardingScreen from "./screens/Onboarding";
 
 const Stack = createStackNavigator();
 
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="LoginScreen" component={LoginScreen} options={{
-      headerShown: false
-    }}/>
-     <Stack.Screen name="SignupScreen" component={SignupScreen} options={{
-      headerShown: false
-    }}/>
-        <Stack.Screen name="HomeStack" component={HomeStack} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isTourComplete, setIsTourComplete] = useState(true);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+  return (
+    <>
+      {!isLoggedIn ? (
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              initialParams={{ setIsLoggedIn, setIsTourComplete }}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="SignupScreen"
+              component={SignupScreen}
+              options={{
+                headerShown: false,
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      ) : isTourComplete ? (
+        <HomeStack />
+      ) : (
+        <OnboardingScreen setIsTourComplete={setIsTourComplete} />
+      )}
+    </>
+  );
+};
+
+export default App;
