@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   TouchableOpacity, Keyboard,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class LoginScreen extends Component {
   constructor(props) {
