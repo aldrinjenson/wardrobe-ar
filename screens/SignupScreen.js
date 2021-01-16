@@ -43,6 +43,18 @@ export default class LoginScreen extends Component {
       <View style={styles.container}>
         <Image style={styles.image} source={require('../assets/logo.png')} />
         <View>
+        <View style={styles.inputContainer}>
+            <Image
+              style={styles.inputIcon}
+              source={require('../assets/user.png')}
+            />
+            <TextInput
+              style={styles.inputs}
+              placeholder="Username"
+              underlineColorAndroid="transparent"
+              onChangeText={name => this.setState({name})}
+            />
+          </View>
           <View style={styles.inputContainer}>
             <Image
               style={styles.inputIcon}
@@ -90,16 +102,11 @@ export default class LoginScreen extends Component {
             style={{
               alignItems: 'flex-end',
 
-              paddingBottom: 7,
+              paddingBottom: 20,
               marginRight: 12,
               marginTop: 5,
             }}>
-            <TouchableOpacity
-             >
-              <Text style={{color: '#21243d', textDecorationLine: 'underline'}}>
-                Forgotpassword?
-              </Text>
-            </TouchableOpacity>
+           
           </View>
         </View>
 
@@ -107,7 +114,7 @@ export default class LoginScreen extends Component {
           style={[styles.buttonContainer, styles.signupButton]}
           onPress={this.login}
           disabled={this.state.disabled}>
-          <Text style={styles.signUpText}>Login</Text>
+          <Text style={styles.signUpText}>Sign Up</Text>
         </TouchableHighlight>
         {this.state.form1 ? (
           <View style={{alignItems: 'center', marginBottom: 5}}>
@@ -130,17 +137,17 @@ export default class LoginScreen extends Component {
               fontSize: 14,
               letterSpacing: 0.8,
             }}>
-            Don't have an Account?{' '}
+          Already have an Account?{' '}
           </Text>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('SignupScreen')}>
+            onPress={() => this.props.navigation.navigate('LoginScreen')}>
             <Text
               style={{
                 color: 'black',
                 textDecorationLine: 'underline',
                 fontWeight: 'bold',
               }}>
-              Sign Up
+              Sign In
             </Text>
           </TouchableOpacity>
         </View>

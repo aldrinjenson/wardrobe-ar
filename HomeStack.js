@@ -4,6 +4,7 @@ import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import WardrobeScreen from "./screens/WardrobeScreen";
 import ScanScreen from "./screens/ScanScreen";
 import ProfileScreen from "./screens/ProfileScreen";
+import OnboardingScreen from "./screens/Onboarding";
 
 const Tab = createBottomTabNavigator();
 
@@ -38,7 +39,7 @@ const HomeStack = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
+        component={OnboardingScreen}
         options={{
           tabBarIcon: ({ focused }) => (
             <MaterialIcons
