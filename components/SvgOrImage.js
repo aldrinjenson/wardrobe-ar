@@ -2,8 +2,7 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { SvgUri } from "react-native-svg";
 
-const SvgOrImage = ({ uri, styles = { height: 100, width: 100 } }) => {
-  console.log(uri);
+const SvgOrImage = ({ uri, styles = {} }) => {
   if (!uri) return null;
   return (
     <>
@@ -23,4 +22,4 @@ const SvgOrImage = ({ uri, styles = { height: 100, width: 100 } }) => {
 
 export default SvgOrImage;
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});

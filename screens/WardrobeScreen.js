@@ -6,18 +6,23 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  Button,
 } from "react-native";
 import { tops, bottoms } from "../tempData";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import SvgOrImage from "../components/SvgOrImage";
+// import SvgOrImage from "../components/SvgOrImage";
 const WardrobeScreen = () => {
-  const [topUrl, setTopUrl] = useState("");
-  const [bottomUrl, setBottomUrl] = useState("");
+  const [topUrl, setTopUrl] = useState(null);
+  const [bottomUrl, setBottomUrl] = useState(null);
 
   const handleClick = (type, url) => {
-    console.log({ type, url });
     if (type === "top") setTopUrl(url);
     else setBottomUrl(url);
+  };
+
+  const handleClear = () => {
+    setTopUrl(null);
+    setBottomUrl(null);
   };
 
   return (
@@ -25,26 +30,53 @@ const WardrobeScreen = () => {
       <View
         style={{
           flex: 1,
-          // backgroundColor: "#7fba8e",
+          backgroundColor: "#7fba8e",
           height: "100%",
           justifyContent: "center",
           alignItems: "center",
           position: "relative",
         }}
       >
-        <MaterialCommunityIcons
-          name="human-handsdown"
-          size={420}
-          color="#e0ac69"
+        <Image
+          source={require("../assets/body.png")}
+          width={100}
+          height={100}
         />
-        <SvgOrImage
+        <Image
+          source={{ uri: topUrl }}
+          style={{
+            height: 128,
+            width: 154,
+            position: "absolute",
+            top: 138,
+            left: 132,
+          }}
+        />
+        <Image
+          source={{ uri: bottomUrl }}
+          style={{
+            width: 153,
+            height: 168,
+            position: "absolute",
+            top: 260,
+            left: 131,
+          }}
+        />
+        {/* <SvgOrImage
           uri={topUrl}
-          styles={{ width: 200, height: 200, position: "absolute" }}
-        />
-        <SvgOrImage
+          styles={{ width: 250, height: 210, position: "absolute" }}
+        /> */}
+        {/* <SvgOrImage
           uri={bottomUrl}
-          styles={{ width: 180, height: 180, position: "absolute", top: 300 }}
-        />
+          styles={{
+            width: 120,
+            height: 200,
+            position: "absolute",
+            top: 300,
+            left: 144,
+          }}
+        /> */}
+        <Button title="Clear" onPress={handleClear} />
       </View>
 
       <View style={styles.bottomDoubleBar}>
