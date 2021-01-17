@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,164 +8,146 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
-  Keyboard,
 } from "react-native";
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Formik } from "formik";
+import * as yup from "yup";
 
-export default class LoginScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      loading: false,
-      disabled: false,
-      form: false,
-      form1: false,
-      form2: false,
-      passf: false,
-    };
-  }
-  login = async () => {
-    // try {
-    //   const jsonValue = JSON.stringify({})
-    //   await AsyncStorage.setItem('@storage_Key', jsonValue);
-    //
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    // this.props.navigation.navigate("Wardrobe");
+const SignUpScreen = ({ route, navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoggedIn, setIsTourComplete } = route.params;
 
-    this.props.route.params.setIsTourComplete(false);
-    this.props.route.params.setIsLoggedIn(true);
-  };
+  const signUpSchema = yup.object({
+    email: yup.string().email("Invalid email fomat").required(),
+    password: yup.string().required().min(6),
+    userName: yup.string().required().min(4),
+  });
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Image style={styles.image} source={require("../assets/logo.png")} />
-        <View>
-          <View style={styles.inputContainer}>
-            <Image
-              style={styles.inputIcon}
-              source={require("../assets/user.png")}
-            />
-            <TextInput
-              style={styles.inputs}
-              placeholder="Username"
-              underlineColorAndroid="transparent"
-              onChangeText={(name) => this.setState({ name })}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Image
-              style={styles.inputIcon}
-              source={require("../assets/email.png")}
-            />
-            <TextInput
-              style={styles.inputs}
-              placeholder="Email"
-              keyboardType="email-address"
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-              onChangeText={(email) => this.setState({ email })}
-            />
-          </View>
-          {this.state.form ? (
-            <View
-              style={{
-                alignItems: "flex-end",
-                marginBottom: -15,
-                marginRight: 5,
-              }}
-            >
-              <Text style={styles.toast}>invalid email</Text>
+  return (
+    <View style={styles.container}>
+      <Image style={styles.image} source={require("../assets/logo.png")} />
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+          userName: "",
+        }}
+        validationSchema={signUpSchema}
+        onSubmit={(values, actions) => {
+          console.log(values);
+          actions.resetForm();
+          setIsTourComplete(false);
+          setIsLoggedIn(true);
+        }}
+      >
+        {(props) => (
+          <>
+            <View style={{ alignItems: "center" }}>
+              <View style={styles.inputContainer}>
+                <Image
+                  style={styles.inputIcon}
+                  source={require("../assets/user.png")}
+                />
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Username"
+                  underlineColorAndroid="transparent"
+                  onChangeText={props.handleChange("userName")}
+                  onBlur={props.handleBlur("userName")}
+                  value={props.values.userName}
+                />
+              </View>
+              {props.touched.email && (
+                <Text style={styles.toast}>{props.errors.email}</Text>
+              )}
+              <View style={styles.inputContainer}>
+                <Image
+                  style={styles.inputIcon}
+                  source={require("../assets/email.png")}
+                />
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Email"
+                  keyboardType="email-address"
+                  underlineColorAndroid="transparent"
+                  autoCapitalize="none"
+                  onChangeText={props.handleChange("email")}
+                  onBlur={props.handleBlur("email")}
+                  value={props.values.email}
+                />
+              </View>
+              {props.touched.email && (
+                <Text style={styles.toast}>{props.errors.email}</Text>
+              )}
+
+              <View style={styles.inputContainer}>
+                <Image
+                  style={styles.inputIcon}
+                  source={require("../assets/password.png")}
+                />
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Password"
+                  secureTextEntry
+                  underlineColorAndroid="transparent"
+                  onChangeText={props.handleChange("password")}
+                  onBlur={props.handleBlur("password")}
+                  value={props.values.password}
+                />
+              </View>
+
+              {props.touched.password && (
+                <Text style={styles.toast}>{props.errors.password}</Text>
+              )}
+
+              <View
+                style={{
+                  alignItems: "flex-end",
+
+                  paddingBottom: 20,
+                  marginRight: 12,
+                  marginTop: 5,
+                }}
+              ></View>
             </View>
-          ) : null}
-          <View style={styles.inputContainer}>
-            <Image
-              style={styles.inputIcon}
-              source={require("../assets/password.png")}
-            />
-            <TextInput
-              style={styles.inputs}
-              placeholder="Password"
-              secureTextEntry
-              underlineColorAndroid="transparent"
-              onChangeText={(password) => this.setState({ password })}
-            />
-          </View>
-          {this.state.passf ? (
-            <View
-              style={{
-                alignItems: "flex-end",
-                marginBottom: 5,
-                marginRight: 5,
-              }}
+            <TouchableHighlight
+              style={[styles.buttonContainer, styles.signupButton]}
+              onPress={props.handleSubmit}
             >
-              <Text style={styles.toast}>password is required</Text>
-            </View>
-          ) : null}
-          <View
-            style={{
-              alignItems: "flex-end",
+              <Text style={styles.signUpText}>Sign Up</Text>
+            </TouchableHighlight>
+          </>
+        )}
+      </Formik>
 
-              paddingBottom: 20,
-              marginRight: 12,
-              marginTop: 5,
-            }}
-          ></View>
-        </View>
-
-        <TouchableHighlight
-          style={[styles.buttonContainer, styles.signupButton]}
-          onPress={this.login}
-          disabled={this.state.disabled}
+      <ActivityIndicator size="large" animating={isLoading} />
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={{
+            color: "#21243d",
+            fontWeight: "900",
+            fontSize: 14,
+            letterSpacing: 0.8,
+          }}
         >
-          <Text style={styles.signUpText}>Sign Up</Text>
-        </TouchableHighlight>
-        {this.state.form1 ? (
-          <View style={{ alignItems: "center", marginBottom: 5 }}>
-            <Text style={styles.toast}>Incorrect email/password</Text>
-          </View>
-        ) : null}
-        {this.state.form2 ? (
-          <View style={{ alignItems: "center", marginBottom: 5 }}>
-            <Text style={styles.toast}>
-              Error establishing connection with server
-            </Text>
-          </View>
-        ) : null}
-        <ActivityIndicator size="large" animating={this.state.loading} />
-        <View style={{ flexDirection: "row" }}>
+          Already have an Account?{" "}
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
           <Text
             style={{
-              color: "#21243d",
-              fontWeight: "900",
-              fontSize: 14,
-              letterSpacing: 0.8,
+              color: "black",
+              textDecorationLine: "underline",
+              fontWeight: "bold",
             }}
           >
-            Already have an Account?{" "}
+            Sign In
           </Text>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate("LoginScreen")}
-          >
-            <Text
-              style={{
-                color: "black",
-                textDecorationLine: "underline",
-                fontWeight: "bold",
-              }}
-            >
-              Sign In
-            </Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
+
+export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -226,9 +208,10 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   toast: {
-    color: "#21243d",
+    color: "#a00",
     fontSize: 14,
     fontWeight: "bold",
     letterSpacing: 0.5,
+    marginBottom: 10,
   },
 });

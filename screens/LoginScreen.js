@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,165 +8,154 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
-  Keyboard,
 } from "react-native";
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Formik } from "formik";
+import * as yup from "yup";
 
-export default class LoginScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: "",
-      password: "",
-      loading: false,
-      disabled: false,
-      form: false,
-      form1: false,
-      form2: false,
-      passf: false,
-    };
-    this.login = this.login.bind(this);
-  }
+const LoginScreen = ({ route, navigation }) => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { setIsLoggedIn, setIsTourComplete } = route.params;
 
-  async login() {
-    // try {
-    //   const jsonValue = JSON.stringify({})
-    //   await AsyncStorage.setItem('@storage_Key', jsonValue);
-    //
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    this.props.route.params.setIsLoggedIn(true);
-  }
+  const signInSchema = yup.object({
+    email: yup.string().email("Invalid email fomat").required(),
+    password: yup.string().required().min(6),
+  });
 
-  render() {
-    const { setIsLoggedIn, setIsTourComplete } = this.props.route.params;
-    return (
-      <View style={styles.container}>
-        <Image style={styles.image} source={require("../assets/logo.png")} />
-        <View>
-          <View style={styles.inputContainer}>
-            <Image
-              style={styles.inputIcon}
-              source={require("../assets/email.png")}
-            />
-            <TextInput
-              style={styles.inputs}
-              placeholder="Email"
-              keyboardType="email-address"
-              underlineColorAndroid="transparent"
-              autoCapitalize="none"
-              onChangeText={(email) => this.setState({ email })}
-            />
-          </View>
-          {this.state.form ? (
+  const handleGoogleSignIn = () => {};
+
+  return (
+    <View style={styles.container}>
+      <Image style={styles.image} source={require("../assets/logo.png")} />
+      <Formik
+        initialValues={{
+          email: "",
+          password: "",
+        }}
+        validationSchema={signInSchema}
+        onSubmit={(values, actions) => {
+          console.log(values);
+          actions.resetForm();
+          setIsLoggedIn(true);
+        }}
+      >
+        {(props) => (
+          <>
+            <View style={styles.inputContainer}>
+              <Image
+                style={styles.inputIcon}
+                source={require("../assets/email.png")}
+              />
+              <TextInput
+                onBlur={props.handleBlur("email")}
+                value={props.values.email}
+                style={styles.inputs}
+                placeholder="Email"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                underlineColorAndroid="transparent"
+                autoCapitalize="none"
+                onChangeText={props.handleChange("email")}
+              />
+            </View>
+
+            {props.touched.email && (
+              <Text style={styles.toast}>{props.errors.email}</Text>
+            )}
+
+            <View style={styles.inputContainer}>
+              <Image
+                style={styles.inputIcon}
+                source={require("../assets/password.png")}
+              />
+              <TextInput
+                style={styles.inputs}
+                onBlur={props.handleBlur("password")}
+                placeholder="Password"
+                secureTextEntry
+                value={props.values.password}
+                underlineColorAndroid="transparent"
+                onChangeText={props.handleChange("password")}
+              />
+            </View>
+            {props.touched.password && (
+              <Text style={styles.toast}>{props.errors.password}</Text>
+            )}
+
             <View
               style={{
                 alignItems: "flex-end",
-                marginBottom: -15,
-                marginRight: 5,
+                paddingBottom: 7,
+                marginRight: 12,
+                marginTop: 5,
               }}
             >
-              <Text style={styles.toast}>invalid email</Text>
+              <TouchableOpacity>
+                <Text
+                  style={{ color: "#21243d", textDecorationLine: "underline" }}
+                >
+                  Forgotpassword?
+                </Text>
+              </TouchableOpacity>
             </View>
-          ) : null}
-          <View style={styles.inputContainer}>
-            <Image
-              style={styles.inputIcon}
-              source={require("../assets/password.png")}
-            />
-            <TextInput
-              style={styles.inputs}
-              placeholder="Password"
-              secureTextEntry
-              underlineColorAndroid="transparent"
-              onChangeText={(password) => this.setState({ password })}
-            />
-          </View>
-          {this.state.passf ? (
-            <View
-              style={{
-                alignItems: "flex-end",
-                marginBottom: 5,
-                marginRight: 5,
-              }}
+
+            <TouchableHighlight
+              style={[styles.buttonContainer, styles.signupButton]}
+              onPress={props.handleSubmit}
             >
-              <Text style={styles.toast}>password is required</Text>
-            </View>
-          ) : null}
-          <View
-            style={{
-              alignItems: "flex-end",
+              <Text style={styles.signUpText}>Login</Text>
+            </TouchableHighlight>
+          </>
+        )}
+      </Formik>
 
-              paddingBottom: 7,
-              marginRight: 12,
-              marginTop: 5,
-            }}
-          >
-            <TouchableOpacity>
-              <Text
-                style={{ color: "#21243d", textDecorationLine: "underline" }}
-              >
-                Forgotpassword?
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <TouchableHighlight
-          style={[styles.buttonContainer, styles.signupButton]}
-          onPress={this.login}
-          disabled={this.state.disabled}
+      <TouchableHighlight
+        style={[styles.buttonContainer, styles.signInWithGoogle]}
+        onPress={handleGoogleSignIn}
+      >
+        <Text style={styles.googleSignInText}>Sign In With Google</Text>
+      </TouchableHighlight>
+      <ActivityIndicator size="large" animating={isLoading} />
+      <View style={{ flexDirection: "row" }}>
+        <Text
+          style={{
+            color: "#21243d",
+            fontWeight: "900",
+            fontSize: 14,
+            letterSpacing: 0.8,
+          }}
         >
-          <Text style={styles.signUpText}>Login</Text>
-        </TouchableHighlight>
-        {this.state.form1 ? (
-          <View style={{ alignItems: "center", marginBottom: 5 }}>
-            <Text style={styles.toast}>Incorrect email/password</Text>
-          </View>
-        ) : null}
-        {this.state.form2 ? (
-          <View style={{ alignItems: "center", marginBottom: 5 }}>
-            <Text style={styles.toast}>
-              Error establishing connection with server
-            </Text>
-          </View>
-        ) : null}
-        <ActivityIndicator size="large" animating={this.state.loading} />
-        <View style={{ flexDirection: "row" }}>
+          Don't have an Account?
+        </Text>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("SignupScreen", {
+              setIsLoggedIn,
+              setIsTourComplete,
+            })
+          }
+        >
           <Text
             style={{
-              color: "#21243d",
-              fontWeight: "900",
-              fontSize: 14,
-              letterSpacing: 0.8,
+              color: "black",
+              textDecorationLine: "underline",
+              fontWeight: "bold",
             }}
           >
-            Don't have an Account?{" "}
+            Sign Up
           </Text>
-          <TouchableOpacity
-            onPress={() =>
-              this.props.navigation.navigate("SignupScreen", {
-                setIsLoggedIn,
-                setIsTourComplete,
-              })
-            }
-          >
-            <Text
-              style={{
-                color: "black",
-                textDecorationLine: "underline",
-                fontWeight: "bold",
-              }}
-            >
-              Sign Up
-            </Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       </View>
-    );
-  }
-}
+      {error && (
+        <Text style={{ ...styles.toast, paddingTop: 20 }}>
+          Error in establishing connection
+        </Text>
+      )}
+    </View>
+  );
+};
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -226,10 +215,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 1,
   },
+  googleSignInText: {
+    color: "white",
+    fontSize: 16,
+    letterSpacing: 1,
+  },
   toast: {
-    color: "#21243d",
+    color: "#a00",
     fontSize: 14,
     fontWeight: "bold",
     letterSpacing: 0.5,
+    marginBottom: 10,
   },
 });

@@ -1,13 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import LoginScreen from "./screens/LoginScreen";
-import SignupScreen from "./screens/SignupScreen";
-import HomeStack from "./HomeStack";
+import HomeStack from "./routes/HomeStack";
 import OnboardingScreen from "./screens/Onboarding";
-
-const Stack = createStackNavigator();
+import LoginStack from "./routes/LoginStack";
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -16,27 +11,12 @@ const App = () => {
   return (
     <>
       {!isLoggedIn ? (
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-              initialParams={{ setIsLoggedIn, setIsTourComplete }}
-              options={{
-                headerShown: false,
-              }}
-            />
-            <Stack.Screen
-              name="SignupScreen"
-              component={SignupScreen}
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <LoginStack
+          setIsLoggedIn={setIsLoggedIn}
+          setIsTourComplete={setIsTourComplete}
+        />
       ) : isTourComplete ? (
-        <HomeStack />
+        <HomeStack setIsLoggedIn={setIsLoggedIn} />
       ) : (
         <OnboardingScreen setIsTourComplete={setIsTourComplete} />
       )}

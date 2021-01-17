@@ -1,20 +1,21 @@
-import * as React from "react";
+import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import WardrobeScreen from "./screens/WardrobeScreen";
-import ScanScreen from "./screens/ScanScreen";
 import { NavigationContainer } from "@react-navigation/native";
-import ProfileScreen from "./screens/ProfileScreen";
+import WardrobeScreen from "../screens/WardrobeScreen";
+import ScanScreen from "../screens/ScanScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
-const HomeStack = () => {
+const HomeStack = ({ setIsLoggedIn }) => {
   return (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
           name="Wardrobe"
           component={WardrobeScreen}
+          initialParams={{ setIsLoggedIn }}
           options={{
             tabBarIcon: ({ focused }) => (
               <FontAwesome5

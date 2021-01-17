@@ -9,6 +9,8 @@ npm-debug.*
 *.orig.*
 web-build/
 
+fbConfig.js
+
 # macOS
 .DS_Store
 package-lock.json

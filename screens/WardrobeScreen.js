@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { tops, bottoms } from "../tempData";
 import SvgOrImage from "../components/SvgOrImage";
-const WardrobeScreen = () => {
+const WardrobeScreen = ({ route }) => {
   const [topUrl, setTopUrl] = useState(null);
   const [bottomUrl, setBottomUrl] = useState(null);
 
@@ -60,21 +60,11 @@ const WardrobeScreen = () => {
             left: 131,
           }}
         />
-        {/* <SvgOrImage
-          uri={topUrl}
-          styles={{ width: 250, height: 210, position: "absolute" }}
-        /> */}
-        {/* <SvgOrImage
-          uri={bottomUrl}
-          styles={{
-            width: 120,
-            height: 200,
-            position: "absolute",
-            top: 300,
-            left: 144,
-          }}
-        /> */}
         <Button title="Clear" onPress={handleClear} />
+        <Button
+          title="LogOut"
+          onPress={() => route.params.setIsLoggedIn(false)}
+        />
       </View>
 
       <View style={styles.bottomDoubleBar}>
