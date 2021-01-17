@@ -11,10 +11,15 @@ import {
 } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { useDispatch } from "react-redux";
+import { toggleTourComplete } from "../redux/actions/miscActions";
 
 const SignUpScreen = ({ route, navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsLoggedIn, setIsTourComplete } = route.params;
+
+  const dispatch = useDispatch();
+
+  const { setIsLoggedIn } = route.params;
 
   const signUpSchema = yup.object({
     email: yup.string().email("Invalid email fomat").required(),
@@ -35,7 +40,7 @@ const SignUpScreen = ({ route, navigation }) => {
         onSubmit={(values, actions) => {
           console.log(values);
           actions.resetForm();
-          setIsTourComplete(false);
+          dispatch(toggleTourComplete, false);
           setIsLoggedIn(true);
         }}
       >

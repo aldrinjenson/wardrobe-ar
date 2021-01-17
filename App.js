@@ -1,26 +1,19 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import HomeStack from "./routes/HomeStack";
-import OnboardingScreen from "./screens/Onboarding";
-import LoginStack from "./routes/LoginStack";
+import React from "react";
+import { applyMiddleware, createStore } from "redux";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+
+import rootReducer from "./redux/reducers/rootReducer";
+import Main from "./routes/Main";
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isTourComplete, setIsTourComplete] = useState(true);
+  const store = createStore(rootReducer, applyMiddleware(thunk));
 
   return (
-    <>
-      {!isLoggedIn ? (
-        <LoginStack
-          setIsLoggedIn={setIsLoggedIn}
-          setIsTourComplete={setIsTourComplete}
-        />
-      ) : isTourComplete ? (
-        <HomeStack setIsLoggedIn={setIsLoggedIn} />
-      ) : (
-        <OnboardingScreen setIsTourComplete={setIsTourComplete} />
-      )}
-    </>
+    <Provider store={store}>
+      <Main />
+    </Provider>
   );
 };
 

@@ -3,15 +3,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import LoginScreen from "../screens/LoginScreen";
 import SignupScreen from "../screens/SignupScreen";
+import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 const Stack = createStackNavigator();
 
-const LoginStack = ({ setIsLoggedIn, setIsTourComplete }) => (
+const LoginStack = ({ setIsLoggedIn }) => (
   <NavigationContainer>
     <Stack.Navigator>
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
-        initialParams={{ setIsLoggedIn, setIsTourComplete }}
+        initialParams={{ setIsLoggedIn }}
         options={{
           headerShown: false,
         }}
@@ -22,6 +23,15 @@ const LoginStack = ({ setIsLoggedIn, setIsTourComplete }) => (
         options={{
           headerShown: false,
         }}
+      />
+      <Stack.Screen
+        name="ForgotPasswordScreen"
+        component={ForgotPasswordScreen}
+        options={
+          {
+            // headerShown: false,
+          }
+        }
       />
     </Stack.Navigator>
   </NavigationContainer>

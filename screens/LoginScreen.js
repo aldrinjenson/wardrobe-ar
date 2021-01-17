@@ -15,7 +15,7 @@ import * as yup from "yup";
 const LoginScreen = ({ route, navigation }) => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { setIsLoggedIn, setIsTourComplete } = route.params;
+  const { setIsLoggedIn } = route.params;
 
   const signInSchema = yup.object({
     email: yup.string().email("Invalid email fomat").required(),
@@ -90,11 +90,13 @@ const LoginScreen = ({ route, navigation }) => {
                 marginTop: 5,
               }}
             >
-              <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("ForgotPasswordScreen")}
+              >
                 <Text
                   style={{ color: "#21243d", textDecorationLine: "underline" }}
                 >
-                  Forgotpassword?
+                  Forgot Password?
                 </Text>
               </TouchableOpacity>
             </View>
@@ -131,7 +133,6 @@ const LoginScreen = ({ route, navigation }) => {
           onPress={() =>
             navigation.navigate("SignupScreen", {
               setIsLoggedIn,
-              setIsTourComplete,
             })
           }
         >

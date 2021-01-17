@@ -1,11 +1,15 @@
 import React from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
-
+import { Image } from "react-native";
 import Onboarding from "react-native-onboarding-swiper";
-const OnboardingScreen = ({ setIsTourComplete }) => {
+import { useDispatch } from "react-redux";
+import { toggleTourComplete } from "../redux/actions/miscActions";
+
+const OnboardingScreen = () => {
+  const dispatch = useDispatch();
+
   return (
     <Onboarding
-      onDone={() => setIsTourComplete(true)}
+      onDone={() => dispatch(toggleTourComplete(true))}
       pages={[
         {
           backgroundColor: "#fff",
