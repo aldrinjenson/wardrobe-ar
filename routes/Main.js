@@ -6,7 +6,7 @@ import OnboardingScreen from "../screens/Onboarding";
 import LoginStack from "../routes/LoginStack";
 
 const Main = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useSelector((state) => state.authReducer.user);
 
   const isTourComplete = useSelector(
     (state) => state.miscReducer.isTourComplete
@@ -14,10 +14,10 @@ const Main = () => {
 
   return (
     <>
-      {!isLoggedIn ? (
-        <LoginStack setIsLoggedIn={setIsLoggedIn} />
+      {!user ? (
+        <LoginStack />
       ) : isTourComplete ? (
-        <HomeStack setIsLoggedIn={setIsLoggedIn} />
+        <HomeStack />
       ) : (
         <OnboardingScreen />
       )}

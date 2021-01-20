@@ -8,10 +8,13 @@ import {
   Button,
 } from "react-native";
 import { tops, bottoms } from "../tempData";
-import SvgOrImage from "../components/SvgOrImage";
-const WardrobeScreen = ({ route }) => {
+// import SvgOrImage from "../components/SvgOrImage";
+import { useDispatch } from "react-redux";
+import { signOutUser } from "../redux/actions/authActions";
+const WardrobeScreen = () => {
   const [topUrl, setTopUrl] = useState(null);
   const [bottomUrl, setBottomUrl] = useState(null);
+  const dispatch = useDispatch();
 
   const handleClick = (type, url) => {
     if (type === "top") setTopUrl(url);
@@ -61,10 +64,7 @@ const WardrobeScreen = ({ route }) => {
           }}
         />
         <Button title="Clear" onPress={handleClear} />
-        <Button
-          title="LogOut"
-          onPress={() => route.params.setIsLoggedIn(false)}
-        />
+        <Button title="LogOut" onPress={() => dispatch(signOutUser())} />
       </View>
 
       <View style={styles.bottomDoubleBar}>
@@ -74,8 +74,8 @@ const WardrobeScreen = ({ route }) => {
               key={id}
               onPress={() => handleClick("top", imgUrl)}
             >
-              {/* <Image key={id} source={{ uri: imgUrl }} style={styles.image} /> */}
-              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
+              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
+              {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -85,8 +85,8 @@ const WardrobeScreen = ({ route }) => {
               key={id}
               onPress={() => handleClick("bottom", imgUrl)}
             >
-              <SvgOrImage key={id} uri={imgUrl} styles={styles.image} />
-              {/* <Image key={id} source={{ uri: imgUrl }} style={styles.image} /> */}
+              {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
+              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
             </TouchableOpacity>
           ))}
         </ScrollView>

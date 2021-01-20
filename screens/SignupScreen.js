@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable no-undef */
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -8,18 +9,16 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
-import { toggleTourComplete } from "../redux/actions/miscActions";
+import { useDispatch, useSelector } from "react-redux";
+import { createNewUser } from "../redux/actions/authActions";
 
-const SignUpScreen = ({ route, navigation }) => {
-  const [isLoading, setIsLoading] = useState(false);
-
+const SignUpScreen = ({ navigation }) => {
+  const isLoading = useSelector((state) => state.authReducer.isLoading);
   const dispatch = useDispatch();
-
-  const { setIsLoggedIn } = route.params;
 
   const signUpSchema = yup.object({
     email: yup.string().email("Invalid email fomat").required(),
@@ -38,10 +37,9 @@ const SignUpScreen = ({ route, navigation }) => {
         }}
         validationSchema={signUpSchema}
         onSubmit={(values, actions) => {
-          console.log(values);
+          Keyboard.dismiss();
           actions.resetForm();
-          dispatch(toggleTourComplete, false);
-          setIsLoggedIn(true);
+          dispatch(createNewUser(values));
         }}
       >
         {(props) => (
@@ -61,8 +59,8 @@ const SignUpScreen = ({ route, navigation }) => {
                   value={props.values.userName}
                 />
               </View>
-              {props.touched.email && (
-                <Text style={styles.toast}>{props.errors.email}</Text>
+              {props.touched.userName && (
+                <Text style={styles.toast}>{props.errors.userName}</Text>
               )}
               <View style={styles.inputContainer}>
                 <Image

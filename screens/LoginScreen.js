@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -8,35 +8,38 @@ import {
   Image,
   ActivityIndicator,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { signInWithEmail } from "../redux/actions/authActions";
 
-const LoginScreen = ({ route, navigation }) => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { setIsLoggedIn } = route.params;
+const LoginScreen = ({ navigation }) => {
+  const isLoading = useSelector((state) => state.authReducer.isLoading);
+  const dispatch = useDispatch();
 
   const signInSchema = yup.object({
     email: yup.string().email("Invalid email fomat").required(),
     password: yup.string().required().min(6),
   });
 
-  const handleGoogleSignIn = () => {};
+  const handleGoogleSignIn = () => {
+    console.log("to be added");
+  };
 
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={require("../assets/logo.png")} />
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          email: "aldrinjenson@gmail.com",
+          password: "12345",
         }}
         validationSchema={signInSchema}
         onSubmit={(values, actions) => {
-          console.log(values);
-          actions.resetForm();
-          setIsLoggedIn(true);
+          dispatch(signInWithEmail(values));
+          Keyboard.dismiss();
         }}
       >
         {(props) => (
@@ -112,12 +115,11 @@ const LoginScreen = ({ route, navigation }) => {
       </Formik>
 
       <TouchableHighlight
-        style={[styles.buttonContainer, styles.signInWithGoogle]}
+        style={{ ...styles.buttonContainer, marginBottom: 20 }}
         onPress={handleGoogleSignIn}
       >
         <Text style={styles.googleSignInText}>Sign In With Google</Text>
       </TouchableHighlight>
-      <ActivityIndicator size="large" animating={isLoading} />
       <View style={{ flexDirection: "row" }}>
         <Text
           style={{
@@ -127,15 +129,9 @@ const LoginScreen = ({ route, navigation }) => {
             letterSpacing: 0.8,
           }}
         >
-          Don't have an Account?
+          Don't have an Account?{" "}
         </Text>
-        <TouchableOpacity
-          onPress={() =>
-            navigation.navigate("SignupScreen", {
-              setIsLoggedIn,
-            })
-          }
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
           <Text
             style={{
               color: "black",
@@ -146,12 +142,9 @@ const LoginScreen = ({ route, navigation }) => {
             Sign Up
           </Text>
         </TouchableOpacity>
+
+        {isLoading && <ActivityIndicator size="large" animating={true} />}
       </View>
-      {error && (
-        <Text style={{ ...styles.toast, paddingTop: 20 }}>
-          Error in establishing connection
-        </Text>
-      )}
     </View>
   );
 };
@@ -227,5 +220,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.5,
     marginBottom: 10,
+    textAlign: "center",
   },
 });

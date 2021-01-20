@@ -6,13 +6,12 @@ import SignupScreen from "../screens/SignupScreen";
 import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 const Stack = createStackNavigator();
 
-const LoginStack = ({ setIsLoggedIn }) => (
+const LoginStack = () => (
   <NavigationContainer>
     <Stack.Navigator>
       <Stack.Screen
         name="LoginScreen"
         component={LoginScreen}
-        initialParams={{ setIsLoggedIn }}
         options={{
           headerShown: false,
         }}

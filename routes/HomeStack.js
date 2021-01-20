@@ -8,14 +8,13 @@ import ProfileScreen from "../screens/ProfileScreen";
 
 const Tab = createBottomTabNavigator();
 
-const HomeStack = ({ setIsLoggedIn }) => {
+const HomeStack = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen
           name="Wardrobe"
           component={WardrobeScreen}
-          initialParams={{ setIsLoggedIn }}
           options={{
             tabBarIcon: ({ focused }) => (
               <FontAwesome5

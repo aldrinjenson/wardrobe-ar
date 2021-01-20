@@ -10,6 +10,7 @@ const OnboardingScreen = () => {
   return (
     <Onboarding
       onDone={() => dispatch(toggleTourComplete(true))}
+      onSkip={() => dispatch(toggleTourComplete(true))}
       pages={[
         {
           backgroundColor: "#fff",
