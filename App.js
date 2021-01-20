@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useEffect } from "react";
 import { applyMiddleware, createStore } from "redux";
 import { Provider } from "react-redux";

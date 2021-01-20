@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { apiDispatch } from "../../utils";
+import { apiDispatch } from "../../global/utils";
 import {
   AUTHENTICATION_BEGIN,
   AUTHENTICATION_SUCCESS,

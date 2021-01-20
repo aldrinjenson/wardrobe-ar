@@ -7,7 +7,7 @@ import {
   Image,
   Button,
 } from "react-native";
-import { tops, bottoms } from "../tempData";
+import { tops, bottoms } from "../global/tempData";
 // import SvgOrImage from "../components/SvgOrImage";
 import { useDispatch } from "react-redux";
 import { signOutUser } from "../redux/actions/authActions";
