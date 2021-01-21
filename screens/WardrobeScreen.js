@@ -39,6 +39,7 @@ const WardrobeScreen = () => {
         }}
       >
         <Image
+          // eslint-disable-next-line no-undef
           source={require("../assets/body.png")}
           width={100}
           height={100}

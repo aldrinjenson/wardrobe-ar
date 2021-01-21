@@ -24,8 +24,6 @@ export const addToAsyncStorage = async (key, value) => {
   const existingObj = await getFromAsyncStorage(key);
   const stringifiedNewObj = JSON.stringify(value);
 
-  console.log({ stringifiedNewObj, existingObj });
-
   if (existingObj !== stringifiedNewObj)
     AsyncStorage.setItem(key, stringifiedNewObj)
       .then(() => console.log("saved to async storage"))

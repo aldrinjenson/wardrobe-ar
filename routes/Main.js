@@ -56,10 +56,10 @@ const Main = () => {
     <>
       {!user ? (
         <LoginStack />
-      ) : isTourComplete ? (
-        <HomeStack />
-      ) : (
+      ) : !isTourComplete ? (
         <OnboardingScreen />
+      ) : (
+        <HomeStack />
       )}
     </>
   );

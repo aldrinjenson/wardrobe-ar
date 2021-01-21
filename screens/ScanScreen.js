@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -11,7 +11,7 @@ const flashModes = {
   2: { type: "auto", icon: "flash-auto" },
 };
 
-const ScanScreen = ({ navigation }) => {
+const ScanScreen = () => {
   const { Type: cType } = Camera.Constants;
   const isFocused = useIsFocused();
   const [hasPermission, setHasPermission] = useState(null);
@@ -39,7 +39,6 @@ const ScanScreen = ({ navigation }) => {
       base64: true,
       skipProcessing: true,
     });
-    // navigation.navigate("Wardrobe");
     setImgUrl(pic.uri);
   };
   console.log(imgUrl);
@@ -92,11 +91,6 @@ const ScanScreen = ({ navigation }) => {
 export default ScanScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   camera: {
     width: "75%",
     height: "75%",
