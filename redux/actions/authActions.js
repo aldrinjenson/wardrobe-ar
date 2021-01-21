@@ -1,26 +1,32 @@
 import firebase from "firebase";
 import { apiDispatch } from "../../global/utils";
 import {
-  AUTHENTICATION_BEGIN,
-  AUTHENTICATION_SUCCESS,
+  SIGN_IN_BEGIN,
+  SIGN_IN_SUCCESS,
   SET_ERROR,
   SIGN_OUT_BEGIN,
   SIGN_OUT_SUCCESS,
   CREATE_NEWUSER_BEGIN,
   CREATE_NEWUSER_SUCCESS,
+  SET_USER_AUTH_DETAILS,
 } from "../constants/authConstants";
 import Toast from "react-native-simple-toast";
 import { TOGGLE_TOUR_COMPLETE } from "../constants/miscConstants";
 
 export const signInWithEmail = ({ email, password }) => {
   return (dispatch) => {
-    dispatch(apiDispatch(AUTHENTICATION_BEGIN));
+    dispatch(apiDispatch(SIGN_IN_BEGIN));
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(({ user }) => {
         Toast.show("Successfully Authenticated");
-        dispatch(apiDispatch(AUTHENTICATION_SUCCESS, user));
+        dispatch(
+          apiDispatch(SIGN_IN_SUCCESS, {
+            name: user.displayName,
+            email: user.email,
+          })
+        );
       })
       .catch((error) => {
         dispatch(apiDispatch(SET_ERROR, error));
@@ -33,7 +39,6 @@ export const signInWithEmail = ({ email, password }) => {
 };
 
 export const signOutUser = () => {
-  console.log("in sign out use function");
   return (dispatch) => {
     dispatch(apiDispatch(SIGN_OUT_BEGIN));
     firebase
@@ -58,7 +63,6 @@ export const createNewUser = ({ email, password, userName }) => {
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then((user) => {
-        console.log(user);
         Toast.show("New Account Created");
         dispatch(apiDispatch(CREATE_NEWUSER_SUCCESS, user));
         dispatch(apiDispatch(TOGGLE_TOUR_COMPLETE, false));
@@ -69,4 +73,23 @@ export const createNewUser = ({ email, password, userName }) => {
         dispatch(apiDispatch(SET_ERROR, err));
       });
   };
+};
+
+export const sendPasswordResetEmail = (email) => {
+  return () => {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(() =>
+        Toast.show("Password Reset Mail sent. Please check your mail")
+      )
+      .catch((err) => {
+        console.log(err);
+        Toast.show(err.message, Toast.LONG);
+      });
+  };
+};
+
+export const setUserDetails = (user) => {
+  return { type: SET_USER_AUTH_DETAILS, payload: user };
 };

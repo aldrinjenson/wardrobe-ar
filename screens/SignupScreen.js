@@ -15,6 +15,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewUser } from "../redux/actions/authActions";
+import globalStyles from "../global/globalStyles";
 
 const SignUpScreen = ({ navigation }) => {
   const isLoading = useSelector((state) => state.authReducer.isLoading);
@@ -28,7 +29,7 @@ const SignUpScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Image style={styles.image} source={require("../assets/logo.png")} />
+      <Image style={globalStyles.logo} source={require("../assets/logo.png")} />
       <Formik
         initialValues={{
           email: "",
@@ -60,7 +61,7 @@ const SignUpScreen = ({ navigation }) => {
                 />
               </View>
               {props.touched.userName && (
-                <Text style={styles.toast}>{props.errors.userName}</Text>
+                <Text style={globalStyles.toast}>{props.errors.userName}</Text>
               )}
               <View style={styles.inputContainer}>
                 <Image
@@ -79,7 +80,7 @@ const SignUpScreen = ({ navigation }) => {
                 />
               </View>
               {props.touched.email && (
-                <Text style={styles.toast}>{props.errors.email}</Text>
+                <Text style={globalStyles.toast}>{props.errors.email}</Text>
               )}
 
               <View style={styles.inputContainer}>
@@ -99,21 +100,15 @@ const SignUpScreen = ({ navigation }) => {
               </View>
 
               {props.touched.password && (
-                <Text style={styles.toast}>{props.errors.password}</Text>
+                <Text style={globalStyles.toast}>{props.errors.password}</Text>
               )}
-
-              <View
-                style={{
-                  alignItems: "flex-end",
-
-                  paddingBottom: 20,
-                  marginRight: 12,
-                  marginTop: 5,
-                }}
-              ></View>
             </View>
             <TouchableHighlight
-              style={[styles.buttonContainer, styles.signupButton]}
+              style={{
+                ...globalStyles.buttonContainer,
+                ...styles.signupButton,
+                marginTop: 25,
+              }}
               onPress={props.handleSubmit}
             >
               <Text style={styles.signUpText}>Sign Up</Text>
@@ -186,23 +181,6 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 15,
     justifyContent: "center",
-  },
-  buttonContainer: {
-    height: 45,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 250,
-    borderRadius: 15,
-    backgroundColor: "#00a8cc",
-    marginBottom: 5,
-  },
-  image: {
-    width: 160,
-    height: 160,
-    borderRadius: 40,
-    marginBottom: 50,
-    marginTop: -10,
   },
   signUpText: {
     color: "white",

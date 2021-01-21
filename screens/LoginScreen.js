@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-undef */
 import React from "react";
 import {
   StyleSheet,
@@ -14,6 +16,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { signInWithEmail } from "../redux/actions/authActions";
+import globalStyles from "../global/globalStyles";
 
 const LoginScreen = ({ navigation }) => {
   const isLoading = useSelector((state) => state.authReducer.isLoading);
@@ -29,24 +32,24 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Image style={styles.image} source={require("../assets/logo.png")} />
+    <View style={{ ...globalStyles.container, backgroundColor: "#E1F2Fb" }}>
+      <Image style={globalStyles.logo} source={require("../assets/logo.png")} />
       <Formik
         initialValues={{
           email: "aldrinjenson@gmail.com",
           password: "12345",
         }}
         validationSchema={signInSchema}
-        onSubmit={(values, actions) => {
+        onSubmit={(values) => {
           dispatch(signInWithEmail(values));
           Keyboard.dismiss();
         }}
       >
         {(props) => (
           <>
-            <View style={styles.inputContainer}>
+            <View style={globalStyles.inputContainer}>
               <Image
-                style={styles.inputIcon}
+                style={globalStyles.inputIcon}
                 source={require("../assets/email.png")}
               />
               <TextInput
@@ -63,12 +66,12 @@ const LoginScreen = ({ navigation }) => {
             </View>
 
             {props.touched.email && (
-              <Text style={styles.toast}>{props.errors.email}</Text>
+              <Text style={globalStyles.toast}>{props.errors.email}</Text>
             )}
 
-            <View style={styles.inputContainer}>
+            <View style={globalStyles.inputContainer}>
               <Image
-                style={styles.inputIcon}
+                style={globalStyles.inputIcon}
                 source={require("../assets/password.png")}
               />
               <TextInput
@@ -82,7 +85,7 @@ const LoginScreen = ({ navigation }) => {
               />
             </View>
             {props.touched.password && (
-              <Text style={styles.toast}>{props.errors.password}</Text>
+              <Text style={globalStyles.toast}>{props.errors.password}</Text>
             )}
 
             <View
@@ -105,7 +108,7 @@ const LoginScreen = ({ navigation }) => {
             </View>
 
             <TouchableHighlight
-              style={[styles.buttonContainer, styles.signupButton]}
+              style={[globalStyles.buttonContainer, styles.signupButton]}
               onPress={props.handleSubmit}
             >
               <Text style={styles.signUpText}>Login</Text>
@@ -115,7 +118,7 @@ const LoginScreen = ({ navigation }) => {
       </Formik>
 
       <TouchableHighlight
-        style={{ ...styles.buttonContainer, marginBottom: 20 }}
+        style={{ ...globalStyles.buttonContainer, marginBottom: 20 }}
         onPress={handleGoogleSignIn}
       >
         <Text style={styles.googleSignInText}>Sign In With Google</Text>
@@ -152,56 +155,8 @@ const LoginScreen = ({ navigation }) => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#E1F2Fb",
-  },
-  inputContainer: {
-    backgroundColor: "#fff3ff",
-    borderRadius: 17,
-    width: 250,
-    height: 43,
-    marginTop: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
-
-    elevation: 3,
-  },
   inputs: {
     width: 200,
-  },
-  inputIcon: {
-    width: 22,
-    height: 22,
-    marginLeft: 15,
-    marginRight: 15,
-    justifyContent: "center",
-  },
-  buttonContainer: {
-    height: 45,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 250,
-    borderRadius: 15,
-    backgroundColor: "#00a8cc",
-    marginBottom: 5,
-  },
-  image: {
-    width: 160,
-    height: 160,
-    borderRadius: 40,
-    marginBottom: 50,
-    marginTop: -10,
   },
   signUpText: {
     color: "white",
@@ -213,13 +168,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     letterSpacing: 1,
-  },
-  toast: {
-    color: "#a00",
-    fontSize: 14,
-    fontWeight: "bold",
-    letterSpacing: 0.5,
-    marginBottom: 10,
-    textAlign: "center",
   },
 });

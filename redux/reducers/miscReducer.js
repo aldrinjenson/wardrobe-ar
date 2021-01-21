@@ -1,7 +1,7 @@
 import { TOGGLE_TOUR_COMPLETE } from "../constants/miscConstants";
 
 const initialState = {
-  isTourComplete: true,
+  isTourComplete: false,
 };
 
 export default (state = initialState, { type, payload }) => {

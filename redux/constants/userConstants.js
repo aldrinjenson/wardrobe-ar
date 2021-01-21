@@ -1,0 +1,1 @@
+export const WARDROBE_AR_USER = "WARDROBE_AR_USER";
