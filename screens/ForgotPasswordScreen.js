@@ -33,7 +33,6 @@ const ForgotPasswordScreen = ({ navigation }) => {
       style={{
         ...globalStyles.container,
         backgroundColor: "#E1F2Fb",
-        justifyContent: "center",
       }}
     >
       <Image style={globalStyles.logo} source={require("../assets/logo.png")} />
@@ -77,7 +76,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
         </TouchableHighlight>
 
         <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
-          <Text style={{ color: "#21243d", textDecorationLine: "underline" }}>
+          <Text
+            style={{
+              color: "#21243d",
+              textDecorationLine: "underline",
+              padding: 20,
+            }}
+          >
             Sign In
           </Text>
         </TouchableOpacity>

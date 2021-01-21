@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-undef */
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,12 +11,17 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Keyboard,
+  Button,
 } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
+import * as AppAuth from "expo-app-auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { signInWithEmail } from "../redux/actions/authActions";
 import globalStyles from "../global/globalStyles";
+import { AUTH_TOKEN_KEY } from "../redux/constants/authConstants";
 
 const LoginScreen = ({ navigation }) => {
   const isLoading = useSelector((state) => state.authReducer.isLoading);
@@ -27,9 +32,82 @@ const LoginScreen = ({ navigation }) => {
     password: yup.string().required().min(6),
   });
 
-  const handleGoogleSignIn = () => {
+  let [authState, setAuthState] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let cachedAuth = await getCachedAuthAsync();
+      if (cachedAuth && !authState) {
+        setAuthState(cachedAuth);
+      }
+    })();
+  }, []);
+
+  let config = {
+    issuer: "https://accounts.google.com",
+    scopes: ["openid", "profile"],
+    /* To be replaced */
+    clientId:
+      "603386649315-vp4revvrcgrcjme51ebuhbkbspl048l9.apps.googleusercontent.com",
+  };
+
+  async function signInAsync() {
+    let authState = await AppAuth.authAsync(config);
+    await cacheAuthAsync(authState);
+    console.log("signInAsync", authState);
+    return authState;
+  }
+
+  async function cacheAuthAsync(authState) {
+    return await AsyncStorage.setItem(
+      AUTH_TOKEN_KEY,
+      JSON.stringify(authState)
+    );
+  }
+
+  async function getCachedAuthAsync() {
+    let value = await AsyncStorage.getItem(AUTH_TOKEN_KEY);
+    let authState = JSON.parse(value);
+    console.log("getCachedAuthAsync", authState);
+    if (authState) {
+      if (checkIfTokenExpired(authState)) {
+        return refreshAuthAsync(authState);
+      } else {
+        return authState;
+      }
+    }
+    return null;
+  }
+
+  function checkIfTokenExpired({ accessTokenExpirationDate }) {
+    return new Date(accessTokenExpirationDate) < new Date();
+  }
+
+  async function refreshAuthAsync({ refreshToken }) {
+    let authState = await AppAuth.refreshAsync(config, refreshToken);
+    console.log("refreshAuth", authState);
+    await cacheAuthAsync(authState);
+    return authState;
+  }
+
+  const handleGoogleSignIn = async () => {
+    const _authState = await signInAsync();
+    setAuthState(_authState);
     console.log("to be added");
   };
+
+  async function signOutAsync({ accessToken }) {
+    try {
+      await AppAuth.revokeAsync(config, {
+        token: accessToken,
+        isClientIdProvided: true,
+      });
+      await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
+      return null;
+    } catch (e) {
+      alert(`Failed to revoke token: ${e.message}`);
+    }
+  }
 
   return (
     <View style={{ ...globalStyles.container, backgroundColor: "#E1F2Fb" }}>
@@ -123,6 +201,13 @@ const LoginScreen = ({ navigation }) => {
       >
         <Text style={styles.googleSignInText}>Sign In With Google</Text>
       </TouchableHighlight>
+      <Button
+        title="sign out from gooogle"
+        onPress={async () => {
+          await signOutAsync(authState);
+          setAuthState(null);
+        }}
+      />
       <View style={{ flexDirection: "row" }}>
         <Text
           style={{

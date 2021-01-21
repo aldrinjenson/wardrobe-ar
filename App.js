@@ -2,11 +2,15 @@ import React, { useEffect } from "react";
 import { applyMiddleware, createStore } from "redux";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import * as Linking from "expo-linking";
 
 import rootReducer from "./redux/reducers/rootReducer";
 import Main from "./routes/Main";
 import firebase from "firebase";
 import { firebaseConfig } from "./fbConfig";
+
+const prefix = Linking.makeUrl("/");
+console.log({ prefix });
 
 const App = () => {
   useEffect(() => {
