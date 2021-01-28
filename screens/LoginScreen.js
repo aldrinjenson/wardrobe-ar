@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-undef */
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -12,16 +12,12 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Keyboard,
-  Button,
 } from "react-native";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import * as AppAuth from "expo-app-auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { logInWithGoogle, signInWithEmail } from "../redux/actions/authActions";
 import globalStyles from "../global/globalStyles";
-import { AUTH_TOKEN_KEY } from "../redux/constants/authConstants";
 
 const LoginScreen = ({ navigation }) => {
   const isLoading = useSelector((state) => state.authReducer.isLoading);
@@ -31,21 +27,6 @@ const LoginScreen = ({ navigation }) => {
     email: yup.string().email("Invalid email fomat").required(),
     password: yup.string().required().min(6),
   });
-
-  let [authState, setAuthState] = useState(null);
-
-  async function signOutAsync({ accessToken }) {
-    try {
-      await AppAuth.revokeAsync(config, {
-        token: accessToken,
-        isClientIdProvided: true,
-      });
-      await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
-      return null;
-    } catch (e) {
-      alert(`Failed to revoke token: ${e.message}`);
-    }
-  }
 
   return (
     <View style={{ ...globalStyles.container, backgroundColor: "#E1F2Fb" }}>
@@ -157,21 +138,16 @@ const LoginScreen = ({ navigation }) => {
 
         {isLoading && <ActivityIndicator size="large" animating={true} />}
       </View>
-      <Text style={styles.or}></Text>
       <TouchableHighlight
-        style={{ ...globalStyles.buttonContainer, marginBottom: 20 }}
+        style={{
+          ...globalStyles.buttonContainer,
+          marginBottom: 20,
+          marginTop: 70,
+        }}
         onPress={() => dispatch(logInWithGoogle())}
       >
         <Text style={styles.googleSignInText}>Sign In With Google</Text>
       </TouchableHighlight>
-
-      <Button
-        title="sign out from gooogle"
-        onPress={async () => {
-          await signOutAsync(authState);
-          setAuthState(null);
-        }}
-      />
     </View>
   );
 };
@@ -192,10 +168,5 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 16,
     letterSpacing: 1,
-  },
-  or: {
-    fontSize: 20,
-    letterSpacing: 1,
-    paddingBottom: 150,
   },
 });

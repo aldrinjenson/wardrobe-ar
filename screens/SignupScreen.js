@@ -32,14 +32,13 @@ const SignUpScreen = ({ navigation }) => {
       <Image style={globalStyles.logo} source={require("../assets/logo.png")} />
       <Formik
         initialValues={{
-          email: "",
-          password: "",
+          email: "test@test.com",
+          password: "123456",
           userName: "",
         }}
         validationSchema={signUpSchema}
-        onSubmit={(values, actions) => {
+        onSubmit={(values) => {
           Keyboard.dismiss();
-          actions.resetForm();
           dispatch(createNewUser(values));
         }}
       >

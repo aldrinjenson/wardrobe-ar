@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { apiDispatch } from "../../global/utils";
+import { addUserToFirebase, apiDispatch } from "../../global/utils";
 import {
   SIGN_IN_BEGIN,
   SIGN_IN_SUCCESS,
@@ -23,12 +23,12 @@ export const signInWithEmail = ({ email, password }) => {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(({ user }) => {
-        console.log(user);
         Toast.show("Successfully Authenticated");
         dispatch(
           apiDispatch(SIGN_IN_SUCCESS, {
             name: user.displayName,
             email: user.email,
+            id: user.uid,
           })
         );
       })
@@ -47,14 +47,15 @@ export const logInWithGoogle = () => {
     dispatch(apiDispatch(SIGN_IN_BEGIN));
     Google.logInAsync(authConfig)
       .then(({ user }) => {
-        console.log(user);
+        const newUser = {
+          name: user.name,
+          email: user.email,
+          id: user.id,
+          clothes: null,
+        };
         Toast.show("Successfully Authenticated");
-        dispatch(
-          apiDispatch(SIGN_IN_SUCCESS, {
-            name: user.name,
-            email: user.email,
-          })
-        );
+        dispatch(apiDispatch(SIGN_IN_SUCCESS, newUser));
+        addUserToFirebase(user.id, newUser);
       })
       .catch((error) => {
         dispatch(apiDispatch(SET_ERROR, error));
@@ -90,10 +91,17 @@ export const createNewUser = ({ email, password, userName }) => {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
-      .then((user) => {
+      .then(({ user }) => {
         Toast.show("New Account Created");
-        dispatch(apiDispatch(CREATE_NEWUSER_SUCCESS, user));
+        const newUser = {
+          name: userName,
+          email: user.email,
+          id: user.uid,
+          clothes: null,
+        };
+        dispatch(apiDispatch(CREATE_NEWUSER_SUCCESS, newUser));
         dispatch(apiDispatch(TOGGLE_TOUR_COMPLETE, false));
+        addUserToFirebase(user.uid, newUser);
       })
       .catch((err) => {
         console.log(err);

@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import firebase from "firebase";
 
 export const apiDispatch = (actionType = "", data = null) => {
   return {
@@ -34,4 +35,18 @@ export const flashModes = {
   0: { type: "off", icon: "flash-off" },
   1: { type: "on", icon: "flash-on" },
   2: { type: "auto", icon: "flash-auto" },
+};
+
+export const addUserToFirebase = (id, newUser) => {
+  const usersRef = firebase.firestore().collection("users").doc(id);
+  usersRef.get().then((docSnapshot) => {
+    if (docSnapshot.exists) {
+      console.log("user exists");
+    } else {
+      usersRef
+        .set(newUser)
+        .then(() => console.log("added user to firebase"))
+        .catch((err) => console.log("error with firebase" + err));
+    }
+  });
 };
