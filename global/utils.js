@@ -29,3 +29,9 @@ export const addToAsyncStorage = async (key, value) => {
       .then(() => console.log("saved to async storage"))
       .catch((err) => console.log("error in saving to async storage" + err));
 };
+
+export const flashModes = {
+  0: { type: "off", icon: "flash-off" },
+  1: { type: "on", icon: "flash-on" },
+  2: { type: "auto", icon: "flash-auto" },
+};

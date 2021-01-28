@@ -13,5 +13,3 @@ fbConfig.js
 
 # macOS
 .DS_Store
-package-lock.json
-package.json

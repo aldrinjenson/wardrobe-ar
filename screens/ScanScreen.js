@@ -1,62 +1,69 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View ,TouchableOpacity} from "react-native";
+import React, { useState, useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Button,
+  Dimensions,
+} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "@expo/vector-icons";
-import { MaterialCommunityIcons ,Ionicons} from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
-const flashModes = {
-  0: { type: "off", icon: "flash-off" },
-  1: { type: "on", icon: "flash-on" },
-  2: { type: "auto", icon: "flash-auto" },
-};
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import * as Permissions from "expo-permissions";
+
+import { flashModes } from "../global/utils";
+import globalStyles from "../global/globalStyles";
 
 const ScanScreen = () => {
   const { Type: cType } = Camera.Constants;
   const isFocused = useIsFocused();
-  const [hasPermission, setHasPermission] = useState(null);
   const [flashIndex, setFlashIndex] = useState(0);
   const [cameraType, setCameraType] = useState(cType.back);
   const [imgUrl, setImgUrl] = useState(null);
   const cameraRef = useRef();
-  let openImagePickerAsync = async () => {
-    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
-    if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
-      return;
-    }
+  const [permission, askForPermission] = Permissions.usePermissions([
+    Permissions.CAMERA,
+    Permissions.MEDIA_LIBRARY,
+  ]);
 
-    let pickerResult = await ImagePicker.launchImageLibraryAsync();
-    console.log(pickerResult);
-  }
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
-
-  if (hasPermission === null) {
-    return <View />;
-  }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  const openImagePickerAsync = async () => {
+    const { uri } = await ImagePicker.launchImageLibraryAsync();
+    setImgUrl(uri);
+  };
 
   const handleSnap = async () => {
-    const pic = await cameraRef.current.takePictureAsync({
+    const { uri } = await cameraRef.current.takePictureAsync({
       base64: true,
       skipProcessing: true,
     });
-    setImgUrl(pic.uri);
+    setImgUrl(uri);
   };
-  console.log(imgUrl);
+
+  if (!permission || permission.status !== "granted") {
+    return (
+      <View style={[globalStyles.container]}>
+        <Text
+          style={{
+            textAlign: "center",
+            margin: 10,
+            width: Dimensions.get("window").width - 79,
+          }}
+        >
+          Permission needed for accessing camera and media files
+        </Text>
+        <Button title="Grant permission" onPress={askForPermission} />
+      </View>
+    );
+  }
+
   return (
     <View
       style={{
-        flex: 1,
-        alignItems: "center",
+        ...globalStyles.container,
         justifyContent: "space-between",
         backgroundColor: "grey",
       }}
@@ -89,21 +96,17 @@ const ScanScreen = () => {
         />
       )}
       <View style={styles.bottomButtons}>
+        <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
+          <Ionicons name="image" size={53} color="black" />
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
-      <Ionicons name="image" size={53} color="black" />
-      </TouchableOpacity>
-
-      <MaterialIcons
-        name="photo-camera"
-        size={56}
-        color="black"
-        onPress={handleSnap}
-        style={styles.scan}
-      />
-      <View></View>
+        <MaterialIcons
+          name="photo-camera"
+          size={56}
+          color="black"
+          onPress={handleSnap}
+        />
       </View>
-      
     </View>
   );
 };
@@ -126,9 +129,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     width: "100%",
-    marginLeft:-50
+    marginLeft: -50,
   },
-  scan:{
- 
-  }
 });

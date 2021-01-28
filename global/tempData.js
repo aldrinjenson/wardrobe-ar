@@ -18,7 +18,10 @@ export const tops = [
     id: 5,
     imgUrl: `https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/img2.png`,
   },
-  { id: 6, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
+  {
+    id: 6,
+    imgUrl: `https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/shirt2.png`,
+  },
   { id: 7, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
   { id: 8, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
 ];

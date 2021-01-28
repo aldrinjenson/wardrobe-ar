@@ -55,8 +55,7 @@ const Main = () => {
   return (
     <>
       {!user ? (
-          
-          <LoginStack />
+        <LoginStack />
       ) : !isTourComplete ? (
         <OnboardingScreen />
       ) : (
