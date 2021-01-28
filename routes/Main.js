@@ -54,12 +54,12 @@ const Main = () => {
 
   return (
     <>
-      {!user ? (
-        <LoginStack />
-      ) : !isTourComplete ? (
+      {!isTourComplete ? (
         <OnboardingScreen />
-      ) : (
+      ) : user ? (
         <HomeStack />
+      ) : (
+        <LoginStack />
       )}
     </>
   );

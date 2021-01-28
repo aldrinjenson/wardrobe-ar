@@ -1,12 +1,5 @@
 import React, { useState, useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Button,
-  Dimensions,
-} from "react-native";
+import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -48,9 +41,8 @@ const ScanScreen = () => {
       <View style={[globalStyles.container]}>
         <Text
           style={{
-            textAlign: "center",
             margin: 10,
-            width: Dimensions.get("window").width - 79,
+            width: Dimensions.get("window").width - 80,
           }}
         >
           Permission needed for accessing camera and media files
@@ -74,7 +66,7 @@ const ScanScreen = () => {
       <View style={styles.topButtons}>
         <MaterialCommunityIcons
           name="camera-switch"
-          size={35}
+          size={40}
           color="black"
           onPress={() => {
             setCameraType(cameraType === cType.back ? cType.front : cType.back);
@@ -82,7 +74,7 @@ const ScanScreen = () => {
         />
         <MaterialIcons
           name={flashModes[flashIndex].icon}
-          size={35}
+          size={40}
           color="black"
           onPress={() => setFlashIndex((indx) => (indx + 1) % 3)}
         />
@@ -95,18 +87,20 @@ const ScanScreen = () => {
           type={cameraType}
         />
       )}
-      <View style={styles.bottomButtons}>
-        <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
-          <Ionicons name="image" size={53} color="black" />
-        </TouchableOpacity>
+      <MaterialIcons
+        name="photo-camera"
+        size={56}
+        color="black"
+        onPress={handleSnap}
+      />
 
-        <MaterialIcons
-          name="photo-camera"
-          size={56}
-          color="black"
-          onPress={handleSnap}
-        />
-      </View>
+      <Ionicons
+        name="images"
+        size={40}
+        color="black"
+        onPress={openImagePickerAsync}
+        style={styles.galleryIcon}
+      />
     </View>
   );
 };
@@ -120,15 +114,14 @@ const styles = StyleSheet.create({
   },
   topButtons: {
     flexDirection: "row",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     width: "100%",
     paddingHorizontal: 30,
     paddingTop: 20,
   },
-  bottomButtons: {
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    width: "100%",
-    marginLeft: -50,
+  galleryIcon: {
+    position: "absolute",
+    bottom: "1.5%",
+    left: 50,
   },
 });
