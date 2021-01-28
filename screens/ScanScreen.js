@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View ,TouchableOpacity} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
+import { MaterialCommunityIcons ,Ionicons} from "@expo/vector-icons";
+import * as ImagePicker from 'expo-image-picker';
 const flashModes = {
   0: { type: "off", icon: "flash-off" },
   1: { type: "on", icon: "flash-on" },
@@ -19,7 +19,17 @@ const ScanScreen = () => {
   const [cameraType, setCameraType] = useState(cType.back);
   const [imgUrl, setImgUrl] = useState(null);
   const cameraRef = useRef();
+  let openImagePickerAsync = async () => {
+    let permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
 
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    let pickerResult = await ImagePicker.launchImageLibraryAsync();
+    console.log(pickerResult);
+  }
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
@@ -78,12 +88,22 @@ const ScanScreen = () => {
           type={cameraType}
         />
       )}
+      <View style={styles.bottomButtons}>
+
+      <TouchableOpacity onPress={openImagePickerAsync} style={styles.button}>
+      <Ionicons name="image" size={53} color="black" />
+      </TouchableOpacity>
+
       <MaterialIcons
         name="photo-camera"
-        size={75}
+        size={56}
         color="black"
         onPress={handleSnap}
+        style={styles.scan}
       />
+      <View></View>
+      </View>
+      
     </View>
   );
 };
@@ -97,9 +117,18 @@ const styles = StyleSheet.create({
   },
   topButtons: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
     width: "100%",
     paddingHorizontal: 30,
     paddingTop: 20,
   },
+  bottomButtons: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    marginLeft:-50
+  },
+  scan:{
+ 
+  }
 });

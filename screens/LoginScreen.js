@@ -18,7 +18,7 @@ import * as yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import * as AppAuth from "expo-app-auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+// import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
 import { signInWithEmail } from "../redux/actions/authActions";
 import globalStyles from "../global/globalStyles";
 import { AUTH_TOKEN_KEY } from "../redux/constants/authConstants";
@@ -94,6 +94,7 @@ const LoginScreen = ({ navigation }) => {
     const _authState = await signInAsync();
     setAuthState(_authState);
     console.log("to be added");
+    navigation.navigate("Profile");
   };
 
   async function signOutAsync({ accessToken }) {
@@ -115,7 +116,7 @@ const LoginScreen = ({ navigation }) => {
       <Formik
         initialValues={{
           email: "aldrinjenson@gmail.com",
-          password: "12345",
+          password: "123456",
         }}
         validationSchema={signInSchema}
         onSubmit={(values) => {
@@ -194,20 +195,6 @@ const LoginScreen = ({ navigation }) => {
           </>
         )}
       </Formik>
-
-      <TouchableHighlight
-        style={{ ...globalStyles.buttonContainer, marginBottom: 20 }}
-        onPress={handleGoogleSignIn}
-      >
-        <Text style={styles.googleSignInText}>Sign In With Google</Text>
-      </TouchableHighlight>
-      <Button
-        title="sign out from gooogle"
-        onPress={async () => {
-          await signOutAsync(authState);
-          setAuthState(null);
-        }}
-      />
       <View style={{ flexDirection: "row" }}>
         <Text
           style={{
@@ -233,6 +220,22 @@ const LoginScreen = ({ navigation }) => {
 
         {isLoading && <ActivityIndicator size="large" animating={true} />}
       </View>
+      <Text style={styles.or}></Text>
+      <TouchableHighlight
+        style={{ ...globalStyles.buttonContainer, marginBottom: 20 }}
+        onPress={handleGoogleSignIn}
+      >
+        <Text style={styles.googleSignInText}>Sign In With Google</Text>
+      </TouchableHighlight>
+  
+      <Button
+        title="sign out from gooogle"
+        onPress={async () => {
+          await signOutAsync(authState);
+          setAuthState(null);
+        }}
+      />
+      
     </View>
   );
 };
@@ -254,4 +257,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 1,
   },
+  or:{
+    fontSize: 20,
+    letterSpacing: 1,
+   paddingBottom:150,
+
+  }
 });

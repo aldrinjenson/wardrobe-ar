@@ -62,7 +62,7 @@ const ProfileScreen = () => {
             left: width / 2 + 35,
           }}
         />
-        <Text style={styles.textRow}>Aldrin Jenson</Text>
+        <Text style={styles.textRow}>{user.email}</Text>
       </View>
       <View
         style={{
@@ -74,7 +74,7 @@ const ProfileScreen = () => {
       <View style={{ marginHorizontal: 15 }}>
         <Text style={styles.title}>Account Details</Text>
         <View>
-          <Text style={styles.textRow}>{user.email}</Text>
+          <Text style={styles.textRow}>Email: {user.email}</Text>
         </View>
         <Text style={styles.title}>Settings</Text>
         <View>
