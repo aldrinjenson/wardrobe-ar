@@ -7,10 +7,9 @@ import * as Linking from "expo-linking";
 import rootReducer from "./redux/reducers/rootReducer";
 import Main from "./routes/Main";
 import firebase from "firebase";
-import { firebaseConfig } from "./fbConfig";
+import { firebaseConfig } from "./config";
 
-const prefix = Linking.makeUrl("/");
-console.log({ prefix });
+Linking.makeUrl("/");
 
 const App = () => {
   useEffect(() => {

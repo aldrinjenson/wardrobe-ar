@@ -24,7 +24,9 @@ const ScanScreen = () => {
   ]);
 
   const openImagePickerAsync = async () => {
-    const { uri } = await ImagePicker.launchImageLibraryAsync();
+    const { uri } = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+    });
     setImgUrl(uri);
   };
 
@@ -32,7 +34,9 @@ const ScanScreen = () => {
     const { uri } = await cameraRef.current.takePictureAsync({
       base64: true,
       skipProcessing: true,
+      allowsEditing: true,
     });
+    console.log(uri);
     setImgUrl(uri);
   };
 

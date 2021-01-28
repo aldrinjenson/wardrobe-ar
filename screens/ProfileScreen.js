@@ -62,7 +62,7 @@ const ProfileScreen = () => {
             left: width / 2 + 35,
           }}
         />
-        <Text style={styles.textRow}>{user.email}</Text>
+        <Text style={styles.textRow}>{user.name}</Text>
       </View>
       <View
         style={{

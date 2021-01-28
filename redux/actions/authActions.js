@@ -11,7 +11,10 @@ import {
   SET_USER_AUTH_DETAILS,
 } from "../constants/authConstants";
 import Toast from "react-native-simple-toast";
+import * as Google from "expo-google-app-auth";
+
 import { TOGGLE_TOUR_COMPLETE } from "../constants/miscConstants";
+import { authConfig } from "../../config";
 
 export const signInWithEmail = ({ email, password }) => {
   return (dispatch) => {
@@ -20,6 +23,7 @@ export const signInWithEmail = ({ email, password }) => {
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(({ user }) => {
+        console.log(user);
         Toast.show("Successfully Authenticated");
         dispatch(
           apiDispatch(SIGN_IN_SUCCESS, {
@@ -30,8 +34,32 @@ export const signInWithEmail = ({ email, password }) => {
       })
       .catch((error) => {
         dispatch(apiDispatch(SET_ERROR, error));
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        Toast.show(errorMessage);
+        console.log({ errorCode, errorMessage });
+      });
+  };
+};
+
+export const logInWithGoogle = () => {
+  return (dispatch) => {
+    dispatch(apiDispatch(SIGN_IN_BEGIN));
+    Google.logInAsync(authConfig)
+      .then(({ user }) => {
+        console.log(user);
+        Toast.show("Successfully Authenticated");
+        dispatch(
+          apiDispatch(SIGN_IN_SUCCESS, {
+            name: user.name,
+            email: user.email,
+          })
+        );
+      })
+      .catch((error) => {
+        dispatch(apiDispatch(SET_ERROR, error));
+        const errorCode = error.code;
+        const errorMessage = error.message;
         Toast.show(errorMessage);
         console.log({ errorCode, errorMessage });
       });
