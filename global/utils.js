@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import firebase from "firebase";
+import * as firebase from "firebase/app";
+import "firebase/storage";
 
 export const apiDispatch = (actionType = "", data = null) => {
   return {
@@ -49,4 +50,61 @@ export const addUserToFirebase = (id, newUser) => {
         .catch((err) => console.log("error with firebase" + err));
     }
   });
+};
+
+export const getEmailsSignedInWithGoogle = async () => {
+  const emailsRef = firebase.firestore().collection("emailsSignedUpWithGoogle");
+  const allEmails = (await emailsRef.get()).docs.map((doc) => doc.data().email);
+  return { allEmails, emailsRef };
+};
+
+export const addUserEmailToFirebase = async (email) => {
+  const { allEmails, emailsRef } = await getEmailsSignedInWithGoogle();
+
+  if (!allEmails.includes(email)) {
+    emailsRef
+      .add({ email })
+      .then(() => console.log("email added"))
+      .catch((err) => console.log("error in adding email" + err));
+  }
+};
+
+const uriToBlob = (uri) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+    xhr.onerror = function () {
+      reject(new Error("uriToBlob failed"));
+    };
+    xhr.responseType = "blob";
+    xhr.open("GET", uri, true);
+    xhr.send(null);
+  });
+};
+
+export const uploadToFirebase = async (uri) => {
+  const blob = await uriToBlob(uri);
+  const storageRef = firebase.storage().ref();
+  const uploadUrl = new Promise((resolve, reject) => {
+    storageRef
+      .child("uploads/photo.jpg")
+      .put(blob, {
+        contentType: "image/jpeg",
+      })
+      .then(() => {
+        blob.close();
+        console.log("File uploaded");
+        storageRef
+          .child("uploads/photo.jpg")
+          .getDownloadURL()
+          .then((url) => resolve(url));
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+
+  return uploadUrl;
 };

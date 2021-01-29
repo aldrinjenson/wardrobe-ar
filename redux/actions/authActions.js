@@ -1,5 +1,10 @@
 import firebase from "firebase";
-import { addUserToFirebase, apiDispatch } from "../../global/utils";
+import {
+  addUserToFirebase,
+  addUserEmailToFirebase,
+  apiDispatch,
+  getEmailsSignedInWithGoogle,
+} from "../../global/utils";
 import {
   SIGN_IN_BEGIN,
   SIGN_IN_SUCCESS,
@@ -56,7 +61,7 @@ export const logInWithGoogle = () => {
         };
         Toast.show("Successfully Authenticated");
         dispatch(apiDispatch(SIGN_IN_SUCCESS, newUser));
-        addUserToFirebase(user.id, newUser);
+        addUserEmailToFirebase(user.email);
       })
       .catch((error) => {
         dispatch(apiDispatch(SET_ERROR, error));
@@ -122,14 +127,17 @@ export const sendPasswordResetEmail = (email) => {
         Toast.show("Password Reset Mail sent. Please check your mail")
       )
       .catch((err) => {
-        if (err.code === 0) {
-          // or whatever
-          // if the user does not exist, check if the user signed up with google, if so,
-          // send toast message to log in with google
-        } else {
-          console.log(err);
-          Toast.show(err.message, Toast.LONG);
-        }
+        getEmailsSignedInWithGoogle().then(({ allEmails }) => {
+          if (allEmails.includes(email)) {
+            Toast.show(
+              "You have signed up with google. Please sign in again using Google",
+              Toast.LONG
+            );
+          } else {
+            console.log(err);
+            Toast.show(err.message, Toast.LONG);
+          }
+        });
       });
   };
 };
