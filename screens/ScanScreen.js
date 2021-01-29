@@ -6,7 +6,6 @@ import {
   Button,
   Dimensions,
   Image,
-  Alert,
   Modal,
   ActivityIndicator,
 } from "react-native";
@@ -18,12 +17,9 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import axios from "axios";
 
-import {
-  addUserEmailToFirebase,
-  flashModes,
-  uploadToFirebase,
-} from "../global/utils";
+import { flashModes, uploadToFirebase } from "../global/utils";
 import globalStyles from "../global/globalStyles";
+import { useEffect } from "react";
 
 const { width } = Dimensions.get("window");
 
@@ -35,6 +31,7 @@ const ScanScreen = () => {
   const [imgUrl, setImgUrl] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [finalImage, setFinalImage] = useState(null);
   const cameraRef = useRef();
 
   const [permission, askForPermission] = Permissions.usePermissions([
@@ -42,11 +39,27 @@ const ScanScreen = () => {
     Permissions.MEDIA_LIBRARY,
   ]);
 
+  useEffect(() => {
+    if (imgUrl) {
+      setFinalImage("");
+    }
+  }, [imgUrl]);
+
   const handleUpload = (uri) => {
     setIsLoading(true);
+    setModalVisible(true);
     uploadToFirebase(uri)
-      .then((storedUrl) => console.log(storedUrl))
-      .then(() => setIsLoading(false));
+      .then((storedUrl) => {
+        console.log({ storedUrl });
+        axios
+          .post(`https://arwardrobe.herokuapp.com/image`, { url: storedUrl })
+          .then(({ data }) => {
+            const { ImageBytes } = data;
+            setFinalImage("data:image/jpeg;base64," + ImageBytes);
+          });
+      })
+      .catch((err) => console.log(err));
+    // .finally(() => setIsLoading(false));
   };
 
   const openImagePickerAsync = async () => {
@@ -84,13 +97,6 @@ const ScanScreen = () => {
     );
   }
 
-  const sendRequest = () => {
-    axios
-      .get("https://arwardrobe.herokuapp.com/")
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
-  };
-
   return (
     <View
       style={{
@@ -103,9 +109,7 @@ const ScanScreen = () => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          Alert.alert("Modal has been closed.");
-        }}
+        onRequestClose={() => setModalVisible(false)}
       >
         {isLoading ? (
           <View
@@ -113,19 +117,29 @@ const ScanScreen = () => {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "grey",
+              backgroundColor: "white",
             }}
           >
             <ActivityIndicator size="large" animating={true} color="black" />
             <Text>Converting image</Text>
+            {finalImage?.length && (
+              <Image
+                source={{ uri: finalImage }}
+                width={250}
+                height={250}
+                style={{
+                  width: 100,
+                  height: 100,
+                }}
+              />
+            )}
           </View>
         ) : (
           <View
             style={{
               flex: 1,
               justifyContent: "center",
-              backgroundColor: "grey",
-              alignItems: "center",
+              backgroundColor: "white",
             }}
           >
             <Image
@@ -164,7 +178,6 @@ const ScanScreen = () => {
           </View>
         )}
       </Modal>
-
       <Text style={{ marginTop: 15 }}>
         Scan your clothes to add them to your wardrobe
       </Text>
@@ -177,7 +190,6 @@ const ScanScreen = () => {
             setCameraType(cameraType === cType.back ? cType.front : cType.back);
           }}
         />
-        <Button onPress={sendRequest} title="send request" />
         <MaterialIcons
           name={flashModes[flashIndex].icon}
           size={40}
@@ -200,7 +212,6 @@ const ScanScreen = () => {
         color="black"
         onPress={handleSnap}
       />
-
       <Ionicons
         name="images"
         size={40}
@@ -208,6 +219,18 @@ const ScanScreen = () => {
         onPress={openImagePickerAsync}
         style={styles.galleryIcon}
       />
+
+      {finalImage?.length && (
+        <Image
+          source={{ uri: finalImage }}
+          width={250}
+          height={250}
+          style={{
+            width: 100,
+            height: 100,
+          }}
+        />
+      )}
     </View>
   );
 };
