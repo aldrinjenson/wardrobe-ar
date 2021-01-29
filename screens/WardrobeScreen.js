@@ -8,6 +8,8 @@ import {
   Button,
 } from "react-native";
 import { tops, bottoms } from "../global/tempData";
+import { EvilIcons } from '@expo/vector-icons'; 
+import * as Sharing from 'expo-sharing'; 
 // import SvgOrImage from "../components/SvgOrImage";
 import { useDispatch } from "react-redux";
 import { signOutUser } from "../redux/actions/authActions";
@@ -25,17 +27,25 @@ const WardrobeScreen = () => {
     setTopUrl(null);
     setBottomUrl(null);
   };
+  let openShareDialogAsync = async () => {
+    if (!(await Sharing.isAvailableAsync())) {
+      alert(`Uh oh, sharing isn't available on your platform`);
+      return;
+    }
 
+    await Sharing.shareAsync(topUrl);
+  }; 
   return (
     <View style={{ flex: 1 }}>
       <View
         style={{
           flex: 1,
-          backgroundColor: "#7fba8e",
+          backgroundColor: "#fff",
           height: "100%",
           justifyContent: "center",
           alignItems: "center",
           position: "relative",
+        
         }}
       >
         <Image
@@ -64,9 +74,16 @@ const WardrobeScreen = () => {
             left: 131,
           }}
         />
+        </View>
+        <View style={styles.share}>
+           <TouchableOpacity onPress={openShareDialogAsync} >
+           <EvilIcons name="share-google" size={70} color="blue" />
+           </TouchableOpacity>
+         
+        </View>
         <Button title="Clear" onPress={handleClear} />
         <Button title="LogOut" onPress={() => dispatch(signOutUser())} />
-      </View>
+      
 
       <View style={styles.bottomDoubleBar}>
         <ScrollView horizontal style={styles.row}>
@@ -106,5 +123,12 @@ const styles = StyleSheet.create({
     height: 75,
     width: 75,
     marginHorizontal: 5,
+    
   },
+  share:{
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    zIndex:1,
+    marginTop:-180
+  }
 });
