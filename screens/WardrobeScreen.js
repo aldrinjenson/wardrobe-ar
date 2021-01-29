@@ -49,18 +49,17 @@ const WardrobeScreen = () => {
       >
         <Image
           // eslint-disable-next-line no-undef
-          source={require("../assets/body.png")}
-          width={100}
-          height={100}
+          source={{uri:"https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/avatar.png"}}
+          style={{height:"100%",width:"100%"}}
         />
         <Image
           source={{ uri: topUrl }}
           style={{
-            height: 128,
-            width: 154,
+            height: "34%",
+            width: "34%",
             position: "absolute",
-            top: 138,
-            left: 132,
+            top: "25%",
+            // left: 132,
           }}
         />
         <Image

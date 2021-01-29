@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { StyleSheet, Text, View, Button, Dimensions } from "react-native";
+import { StyleSheet, Text, View, Button, Dimensions, Alert,Image, Modal,TouchableHighlight} from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -18,7 +18,7 @@ const ScanScreen = () => {
   const [cameraType, setCameraType] = useState(cType.back);
   const [imgUrl, setImgUrl] = useState(null);
   const cameraRef = useRef();
-
+  const [modalVisible, setModalVisible] = useState(false);
   const [permission, askForPermission] = Permissions.usePermissions([
     Permissions.CAMERA,
     Permissions.MEDIA_LIBRARY,
@@ -34,24 +34,26 @@ const ScanScreen = () => {
     if (pic.cancelled) {
       return;
     }
-    const uri  = pic.uri;
-    let filename = uri.split('/').pop();
-    let uriArray=uri.split(".");
-    let fileType=uriArray[uriArray.length-1]
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-    let formData = new FormData();
-    formData.append("pic", { uri: uri, name:`photo.${fileType}`, type:"image/jpg"});
-    console.log(formData);
-    setImgUrl(uri);
-    axios.post(`http://127.0.0.1:5000/image`, {
-      body: formData,
-      headers: {
-        'content-type': 'multipart/form-data',
-        'Accept': 'application/json',
-      },
-    }).then(x=>console.log(x))
-    .catch((e)=> console.log(e));
+    setImgUrl(pic.uri);
+    setModalVisible(true);
+    // const uri  = pic.uri;
+    // let filename = uri.split('/').pop();
+    // let uriArray=uri.split(".");
+    // let fileType=uriArray[uriArray.length-1]
+    // let match = /\.(\w+)$/.exec(filename);
+    // let type = match ? `image/${match[1]}` : `image`;
+    // let formData = new FormData();
+    // formData.append("pic", { uri: uri, name:`photo.${fileType}`, type:"image/jpg"});
+    // console.log(formData);
+    // setImgUrl(uri);
+    // axios.post(`http://127.0.0.1:5000/image`, {
+    //   body: formData,
+    //   headers: {
+    //     'content-type': 'multipart/form-data',
+    //     'Accept': 'application/json',
+    //   },
+    // }).then(x=>console.log(x))
+    // .catch((e)=> console.log(e));
   };
 
   const handleSnap = async () => {
@@ -60,23 +62,27 @@ const ScanScreen = () => {
       skipProcessing: true,
       allowsEditing: true,
     });
-    const uri  = pic.uri;
-    let filename = uri.split('/').pop();
+    if(!pic.cancelled){
+      setImgUrl(pic.uri);
+    }
+    
+    setModalVisible(true);
+    // let filename = uri.split('/').pop();
 
-    let match = /\.(\w+)$/.exec(filename);
-    let type = match ? `image/${match[1]}` : `image`;
-    console.log(match);
-    let formData = new FormData();
-    formData.append('pic', { uri: uri, name: filename, type:"jpg" });
-    setImgUrl(uri);
-     await fetch('http://127.0.0.1:5000/image', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'content-type': 'multipart/form-data',
-      },
-    }).then(x=>console.log(x))
-    .catch((e)=> console.log(e));
+    // let match = /\.(\w+)$/.exec(filename);
+    // let type = match ? `image/${match[1]}` : `image`;
+    // console.log(match);
+    // let formData = new FormData();
+    // formData.append('pic', { uri: uri, name: filename, type:"jpg" });
+    // setImgUrl(uri);
+    //  await fetch('http://127.0.0.1:5000/image', {
+    //   method: 'POST',
+    //   body: formData,
+    //   headers: {
+    //     'content-type': 'multipart/form-data',
+    //   },
+    // }).then(x=>console.log(x))
+    // .catch((e)=> console.log(e));
   };
 
   if (!permission || permission.status !== "granted") {
@@ -102,7 +108,30 @@ const ScanScreen = () => {
         justifyContent: "space-between",
         backgroundColor: "grey",
       }}
-    >
+    ><Modal
+    animationType="slide"
+    transparent={true}
+    visible={modalVisible}
+    onRequestClose={() => {
+      Alert.alert('Modal has been closed.');
+    }}>
+    <View style={styles.centeredView}>
+      <View style={styles.modalView}>
+        <Text style={styles.modalText}>T-shirt detected</Text>
+        <Image
+          source={{ uri: imgUrl }}
+          style={{ width: 300, height: 300,marginBottom:20 }}
+        />
+        <TouchableHighlight
+          style={{ ...styles.openButton, backgroundColor: '#2196F3' }}
+          onPress={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <Text style={styles.textStyle}>close</Text>
+        </TouchableHighlight>
+      </View>
+    </View>
+  </Modal>
       <Text style={{ marginTop: 15 }}>
         Scan your clothes to add them to your wardrobe
       </Text>
@@ -167,5 +196,42 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: "1.5%",
     left: 50,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: '#F194FF',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+    fontSize:30
   },
 });
