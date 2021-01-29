@@ -6,6 +6,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
+import axios from "axios";
 
 import { flashModes } from "../global/utils";
 import globalStyles from "../global/globalStyles";
@@ -30,9 +31,27 @@ const ScanScreen = () => {
       aspect: [1, 1],
       quality: 1,
     });
-    console.log(pic);
-    const { uri } = pic;
+    if (pic.cancelled) {
+      return;
+    }
+    const uri  = pic.uri;
+    let filename = uri.split('/').pop();
+    let uriArray=uri.split(".");
+    let fileType=uriArray[uriArray.length-1]
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+    let formData = new FormData();
+    formData.append("pic", { uri: uri, name:`photo.${fileType}`, type:"image/jpg"});
+    console.log(formData);
     setImgUrl(uri);
+    axios.post(`http://127.0.0.1:5000/image`, {
+      body: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+        'Accept': 'application/json',
+      },
+    }).then(x=>console.log(x))
+    .catch((e)=> console.log(e));
   };
 
   const handleSnap = async () => {
@@ -41,9 +60,23 @@ const ScanScreen = () => {
       skipProcessing: true,
       allowsEditing: true,
     });
-    const { uri } = pic;
-    console.log(pic);
+    const uri  = pic.uri;
+    let filename = uri.split('/').pop();
+
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+    console.log(match);
+    let formData = new FormData();
+    formData.append('pic', { uri: uri, name: filename, type:"jpg" });
     setImgUrl(uri);
+     await fetch('http://127.0.0.1:5000/image', {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    }).then(x=>console.log(x))
+    .catch((e)=> console.log(e));
   };
 
   if (!permission || permission.status !== "granted") {
