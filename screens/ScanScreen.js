@@ -24,19 +24,25 @@ const ScanScreen = () => {
   ]);
 
   const openImagePickerAsync = async () => {
-    const { uri } = await ImagePicker.launchImageLibraryAsync({
+    // const { uri } = await ImagePicker.launchImageLibraryAsync({
+    const pic = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
     });
+    console.log(pic);
+    const { uri } = pic;
     setImgUrl(uri);
   };
 
   const handleSnap = async () => {
-    const { uri } = await cameraRef.current.takePictureAsync({
-      base64: true,
+    const pic = await cameraRef.current.takePictureAsync({
+      // base64: true,
       skipProcessing: true,
       allowsEditing: true,
     });
-    console.log(uri);
+    const { uri } = pic;
+    console.log(pic);
     setImgUrl(uri);
   };
 
@@ -89,6 +95,7 @@ const ScanScreen = () => {
           style={styles.camera}
           flashMode={flashModes[flashIndex]}
           type={cameraType}
+          ratio="1:1"
         />
       )}
       <MaterialIcons

@@ -52,6 +52,7 @@ export const logInWithGoogle = () => {
           email: user.email,
           id: user.id,
           clothes: null,
+          didSignUpWithGoogle: true,
         };
         Toast.show("Successfully Authenticated");
         dispatch(apiDispatch(SIGN_IN_SUCCESS, newUser));
@@ -98,6 +99,7 @@ export const createNewUser = ({ email, password, userName }) => {
           email: user.email,
           id: user.uid,
           clothes: null,
+          didSignUpWithGoogle: false,
         };
         dispatch(apiDispatch(CREATE_NEWUSER_SUCCESS, newUser));
         dispatch(apiDispatch(TOGGLE_TOUR_COMPLETE, false));
@@ -120,8 +122,14 @@ export const sendPasswordResetEmail = (email) => {
         Toast.show("Password Reset Mail sent. Please check your mail")
       )
       .catch((err) => {
-        console.log(err);
-        Toast.show(err.message, Toast.LONG);
+        if (err.code === 0) {
+          // or whatever
+          // if the user does not exist, check if the user signed up with google, if so,
+          // send toast message to log in with google
+        } else {
+          console.log(err);
+          Toast.show(err.message, Toast.LONG);
+        }
       });
   };
 };

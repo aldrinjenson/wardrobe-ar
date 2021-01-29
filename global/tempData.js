@@ -22,7 +22,10 @@ export const tops = [
     id: 6,
     imgUrl: `https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/shirt2.png`,
   },
-  { id: 7, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
+  {
+    id: 7,
+    imgUrl: `https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/shirt1.png`,
+  },
   { id: 8, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
 ];
 export const bottoms = [
@@ -39,7 +42,10 @@ export const bottoms = [
     id: 4,
     imgUrl: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVpXhU2Wrrbl3QjLuBWsWKEp6P9HezAlF2OQ&usqp=CAU`,
   },
-  { id: 5, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
+  {
+    id: 5,
+    imgUrl: `https://raw.githubusercontent.com/aldrinjenson/wardrobe-ar/master/assets/pants.png`,
+  },
   { id: 6, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
   { id: 7, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },
   { id: 8, imgUrl: `https://picsum.photos/id/${floor(random() * 40)}/200` },

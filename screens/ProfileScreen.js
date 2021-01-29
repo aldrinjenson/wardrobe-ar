@@ -81,11 +81,13 @@ const ProfileScreen = () => {
           <TouchableOpacity onPress={() => dispatch(toggleTourComplete(false))}>
             <Text style={styles.textRow}>Show Tour</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => dispatch(sendPasswordResetEmail(user.email))}
-          >
-            <Text style={styles.textRow}>Reset Password</Text>
-          </TouchableOpacity>
+          {!user.didSignUpWithGoogle && (
+            <TouchableOpacity
+              onPress={() => dispatch(sendPasswordResetEmail(user.email))}
+            >
+              <Text style={styles.textRow}>Reset Password</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={() => dispatch(signOutUser())}>
             <Text style={styles.textRow}>Sign Out</Text>
           </TouchableOpacity>
