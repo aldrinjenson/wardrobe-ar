@@ -9,6 +9,7 @@ import {
   Modal,
   ActivityIndicator,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useIsFocused } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -17,7 +18,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import axios from "axios";
 
-import { flashModes, uploadToFirebase } from "../global/utils";
+import { flashModes, uploadToFirebase,addToAsyncStorage} from "../global/utils";
 import globalStyles from "../global/globalStyles";
 import { useEffect } from "react";
 
@@ -56,9 +57,11 @@ const ScanScreen = () => {
           .then(({ data }) => {
             const { ImageBytes } = data;
             setFinalImage("data:image/jpeg;base64," + ImageBytes);
+            setIsLoading(false);
           });
       })
       .catch((err) => console.log(err));
+      
     // .finally(() => setIsLoading(false));
   };
 
@@ -70,7 +73,25 @@ const ScanScreen = () => {
     });
     handleUpload(uri);
   };
+  const saveimage = async () => {
+    const existingImages= await AsyncStorage.getItem("images");
+    let newImage = JSON.parse(existingImages);
+    if( !newImage ){
+    newImage = [];
+    console.log('hi')
+    }
+    newImage.push( finalImage );
+    await AsyncStorage.setItem("images", JSON.stringify(newImage) )
+ .then( ()=>{
+ console.log("It was saved successfully")
+ } )
+ .catch( ()=>{
+ console.log("There was an error saving the product")
+ } )
 
+    setModalVisible(false);
+    
+  };
   const handleSnap = async () => {
     const { uri } = await cameraRef.current.takePictureAsync({
       // base64: true,
@@ -96,7 +117,7 @@ const ScanScreen = () => {
       </View>
     );
   }
-
+  
   return (
     <View
       style={{
@@ -124,7 +145,7 @@ const ScanScreen = () => {
             <Text>Converting image</Text>
             {finalImage?.length && (
               <Image
-                source={{ uri: finalImage }}
+                source={{ uri: imgUrl }}
                 width={250}
                 height={250}
                 style={{
@@ -132,6 +153,7 @@ const ScanScreen = () => {
                   height: 100,
                 }}
               />
+        
             )}
           </View>
         ) : (
@@ -143,7 +165,7 @@ const ScanScreen = () => {
             }}
           >
             <Image
-              source={{ uri: imgUrl }}
+              source={{ uri: finalImage }}
               width={250}
               height={250}
               style={{
@@ -167,9 +189,9 @@ const ScanScreen = () => {
                 color="black"
               />
               <MaterialIcons
-                onPress={() => {
-                  handleUpload(imgUrl);
-                }}
+                onPress={
+                  saveimage
+                }
                 name="check"
                 size={40}
                 color="black"
@@ -220,7 +242,7 @@ const ScanScreen = () => {
         style={styles.galleryIcon}
       />
 
-      {finalImage?.length && (
+      {/* {finalImage?.length && (
         <Image
           source={{ uri: finalImage }}
           width={250}
@@ -230,7 +252,7 @@ const ScanScreen = () => {
             height: 100,
           }}
         />
-      )}
+      )} */}
     </View>
   );
 };

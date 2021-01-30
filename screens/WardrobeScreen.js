@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import {
   StyleSheet,
   View,
@@ -7,22 +7,36 @@ import {
   Image,
   Button,
 } from "react-native";
-import { tops, bottoms } from "../global/tempData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import {  bottoms } from "../global/tempData";
 import { EvilIcons } from "@expo/vector-icons";
 import * as Sharing from "expo-sharing";
 // import SvgOrImage from "../components/SvgOrImage";
 import { useDispatch } from "react-redux";
 import { signOutUser } from "../redux/actions/authActions";
 const WardrobeScreen = () => {
+  const [tops, setTops] = useState(['']);
   const [topUrl, setTopUrl] = useState(null);
   const [bottomUrl, setBottomUrl] = useState(null);
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    async function fetchData() {
+    let top=await AsyncStorage.getItem("images");
+    let value=JSON.parse(top);
+    console.log(value);
+    setTops(value);
+    }
+    fetchData();
+  }, []);
   const handleClick = (type, url) => {
     if (type === "top") setTopUrl(url);
     else setBottomUrl(url);
   };
-
+  const getImages= async() => {
+    let top=await AsyncStorage.getItem("images");
+    console.log(top);
+    }
   const handleClear = () => {
     setTopUrl(null);
     setBottomUrl(null);
@@ -59,8 +73,8 @@ const WardrobeScreen = () => {
             height: 128,
             width: 154,
             position: "absolute",
-            top: 138,
-            left: 132,
+            top: 250,
+            left: 128,
           }}
         />
         <Image
@@ -69,8 +83,8 @@ const WardrobeScreen = () => {
             width: 153,
             height: 168,
             position: "absolute",
-            top: 260,
-            left: 131,
+            top: 367,
+            left: 124,
           }}
         />
       </View>
@@ -80,16 +94,16 @@ const WardrobeScreen = () => {
         </TouchableOpacity>
       </View>
       <Button title="Clear" onPress={handleClear} />
-      <Button title="LogOut" onPress={() => dispatch(signOutUser())} />
+      {/* <Button title="LogOut" onPress={() => dispatch(signOutUser())} /> */}
 
       <View style={styles.bottomDoubleBar}>
         <ScrollView horizontal style={styles.row}>
-          {tops.map(({ id, imgUrl }) => (
+          {tops?.map((x ) => (
             <TouchableOpacity
-              key={id}
-              onPress={() => handleClick("top", imgUrl)}
+              // key={id}
+              onPress={() => handleClick("top", x)}
             >
-              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
+              <Image source={{ uri: x }} style={styles.image} />
               {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
             </TouchableOpacity>
           ))}
@@ -101,7 +115,7 @@ const WardrobeScreen = () => {
               onPress={() => handleClick("bottom", imgUrl)}
             >
               {/* <SvgOrImage key={id} uri={imgUrl} styles={styles.image} /> */}
-              <Image key={id} source={{ uri: imgUrl }} style={styles.image} />
+              <Image key={id} source={{ uri: imgUrl }} style={styles.image2} />
             </TouchableOpacity>
           ))}
         </ScrollView>
@@ -119,6 +133,11 @@ const styles = StyleSheet.create({
   image: {
     height: 75,
     width: 75,
+    marginHorizontal: 5,
+  },
+  image2: {
+    height: 79,
+    width: 79,
     marginHorizontal: 5,
   },
   share: {
